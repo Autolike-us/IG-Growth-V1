@@ -1,0 +1,838 @@
+{
+  "extName": {
+    "message": "Growth Auto Bot- auto follow,like,DM,comment",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "A smart Facebook™ & Messenger™ tool to automatically send mass DM(direct message) to users.",
+    "description": "Smart automation bot for  Instagram™, super easy to auto Follow,Like,Comment,DM to increase exposure and gain more real followers."
+  },
+  "common_pause": {
+    "message": "Pause"
+  },
+  "common_stop": {
+    "message": "Stop"
+  },
+  "common_continue": {
+    "message": "Continue"
+  },
+  "common_startWorking": {
+    "message": "Start Working"
+  },
+  "common_taskInProgress": {
+    "message": "$1/$2 Task in progress..."
+  },
+  "common_detail": {
+    "message": "Detail >"
+  },
+  "common_cancel": {
+    "message": "Cancel"
+  },
+  "common_save": {
+    "message": "Save"
+  },
+  "common_importing": {
+    "message": "Importing..."
+  },
+  "common_exporting": {
+    "message": "Exporting..."
+  },
+  "common_upgradeToPro": {
+    "message": "Please upgrade to Pro to use this feature"
+  },
+  "common_version": {
+    "message": "version:"
+  },
+  "aria_apps": {
+    "message": "apps"
+  },
+  "aria_faqs": {
+    "message": "FAQS"
+  },
+  "aria_edit": {
+    "message": "Edit"
+  },
+  "aria_delete": {
+    "message": "Delete"
+  },
+  "aria_back": {
+    "message": "Back"
+  },
+  "aria_save": {
+    "message": "Save"
+  },
+  "aria_copy": {
+    "message": "Copy"
+  },
+  "aria_language": {
+    "message": "Language"
+  },
+  "aria_pre": {
+    "message": "pre"
+  },
+  "aria_next": {
+    "message": "next"
+  },
+  "home_versionAvailable": {
+    "message": "Version $1 is available"
+  },
+  "home_updateNow": {
+    "message": "Update Now"
+  },
+  "home_selectBot": {
+    "message": "Please select a bot"
+  },
+  "home_createNewBot": {
+    "message": "Create a new bot"
+  },
+  "home_selectHistory": {
+    "message": "Please select history"
+  },
+  "home_noHistory": {
+    "message": "No History"
+  },
+  "home_type": {
+    "message": "Type:"
+  },
+  "home_targetPost": {
+    "message": "Target Post:"
+  },
+  "home_targetUsers": {
+    "message": "Target User(s):"
+  },
+  "home_targetLocation": {
+    "message": "Target Location:"
+  },
+  "home_targetHashTag": {
+    "message": "Target HashTag:"
+  },
+  "home_limitMaxUsers": {
+    "message": "Limit Max Users:"
+  },
+  "home_timeInterval": {
+    "message": "Time interval(minutes):"
+  },
+  "home_dmTemplate": {
+    "message": "DM Template:"
+  },
+  "home_pauseFor": {
+    "message": "Pause for"
+  },
+  "home_minutesAfterEvery": {
+    "message": "minutes after sending every"
+  },
+  "home_users": {
+    "message": "users."
+  },
+  "home_failWaitBefore": {
+    "message": "If the task for the current target user fails, wait"
+  },
+  "home_failWaitAfter": {
+    "message": "minute(s) before moving to the next target user."
+  },
+  "home_pauseTriggerBefore": {
+    "message": "The task will be paused immediately if"
+  },
+  "home_pauseTriggerAfter": {
+    "message": "consecutive target users fail."
+  },
+  "home_enableFilter": {
+    "message": "Enable Advanced Filter Options("
+  },
+  "home_proFeature": {
+    "message": "Pro feature)"
+  },
+  "home_filterTip1": {
+    "message": "1.After enabling, only send DMs to users who meet the filtering criteria."
+  },
+  "home_filterTip2": {
+    "message": "2.An additional request to fetch target user profile information."
+  },
+  "home_upgradeClick": {
+    "message": "!This is a pro feature and requires upgrading to pro. Click here to upgrade."
+  },
+  "home_filter": {
+    "message": "Filter"
+  },
+  "home_min": {
+    "message": "Min"
+  },
+  "home_max": {
+    "message": "Max"
+  },
+  "home_followers": {
+    "message": "Followers"
+  },
+  "home_following": {
+    "message": "Following"
+  },
+  "home_posts": {
+    "message": "Posts"
+  },
+  "home_isPrivate": {
+    "message": "Is Private"
+  },
+  "home_isVerified": {
+    "message": "Is Verified"
+  },
+  "home_isBusiness": {
+    "message": "Is Business"
+  },
+  "home_sessionExpiredTitle": {
+    "message": "Error: Session expired"
+  },
+  "home_sessionExpiredBody": {
+    "message": "Please go to $1 to login again."
+  },
+  "home_goToLogin": {
+    "message": "Go to login"
+  },
+  "home_loginFirst": {
+    "message": "Please log in Instagram first."
+  },
+  "home_goToInstagram": {
+    "message": "Go to Instagram"
+  },
+  "bot_listTip": {
+    "message": "Create a bot that can be selected to send DMs/auto follow/comment/like from the homepage once it's set up."
+  },
+  "bot_bots": {
+    "message": "Bots"
+  },
+  "bot_createBot": {
+    "message": "Create Bot"
+  },
+  "bot_importBots": {
+    "message": "Import DM Bots from Json file"
+  },
+  "bot_exportBots": {
+    "message": "Export DM Bots to Json file"
+  },
+  "bot_createYourBot": {
+    "message": "Create your Bot"
+  },
+  "bot_step1": {
+    "message": "1. Enter bot name"
+  },
+  "bot_namePlaceholder": {
+    "message": "eg. natgeo Follower Bot"
+  },
+  "bot_step2": {
+    "message": "2. Select target type"
+  },
+  "bot_step3UsernameList": {
+    "message": "3.Username List (separated by comma)"
+  },
+  "bot_usernameList": {
+    "message": "Username List (separated by comma)"
+  },
+  "bot_csvTip": {
+    "message": "To avoid format errors, we recommend you download the 'CSV file Demo', modify the file and save it, finally click on 'import from CSV file' to import the data."
+  },
+  "bot_customUsersPlaceholder": {
+    "message": "eg. natgeo,spacex,nike"
+  },
+  "bot_importFromCsv": {
+    "message": "import from CSV file"
+  },
+  "bot_csvDemo": {
+    "message": "CSV file Demo"
+  },
+  "bot_step3HashTag": {
+    "message": "3.Input Instagram HashTag(don't include the '#' symbol)"
+  },
+  "bot_hashTagPlaceholder": {
+    "message": "eg: iggrowth"
+  },
+  "bot_step3Location": {
+    "message": "3.Input Instagram Location Link"
+  },
+  "bot_getLocationLink": {
+    "message": "Get location link."
+  },
+  "bot_locationPlaceholder": {
+    "message": "eg: https://www.instagram.com/explore/locations/36044"
+  },
+  "bot_step3PostLink": {
+    "message": "3.Input Instagram Post Link"
+  },
+  "bot_postLinkPlaceholder": {
+    "message": "eg: https://www.instagram.com/p/Cqnh8EJAHg0"
+  },
+  "bot_step3TargetUsername": {
+    "message": "3.Input target Instagram username"
+  },
+  "bot_targetUsernamePlaceholder": {
+    "message": "eg. natgeo"
+  },
+  "bot_step4Actions": {
+    "message": "4.Actions (select at least one action)"
+  },
+  "bot_autoFollow": {
+    "message": "Auto Follow"
+  },
+  "bot_sendDm": {
+    "message": "Send DM"
+  },
+  "bot_likePost": {
+    "message": "Like Post"
+  },
+  "bot_commentPost": {
+    "message": "Comment post"
+  },
+  "bot_dmRandomTip": {
+    "message": "*Send DM with random text from selected DM template"
+  },
+  "bot_selectDmTemplate": {
+    "message": "Please select a DM template"
+  },
+  "bot_commentRandomTip": {
+    "message": "*Comment with random text from selected Comment template"
+  },
+  "bot_selectCommentTemplate": {
+    "message": "Please select a Comment template"
+  },
+  "bot_createTemplateLink": {
+    "message": "Click here to create a new DM/Comment template."
+  },
+  "bot_step4Blacklist": {
+    "message": "4.Enable blacklist"
+  },
+  "bot_blacklistTip": {
+    "message": "will not send DM to users in the blacklist"
+  },
+  "bot_importBlacklistCsv": {
+    "message": "import blacklist from CSV file"
+  },
+  "bot_blacklistCsvDemo": {
+    "message": "Blacklist CSV file Demo"
+  },
+  "bot_step5Limit": {
+    "message": "5. Limit Max Users:"
+  },
+  "bot_banWarning": {
+    "message": "⚠️To avoid your account being banned, we suggest: Increase the time interval of action and pause time"
+  },
+  "bot_step6Interval": {
+    "message": "6. Time interval between users (minutes):"
+  },
+  "bot_step7PauseFor": {
+    "message": "7. Pause for"
+  },
+  "bot_step7MinutesAfter": {
+    "message": "minutes after sending every"
+  },
+  "bot_step7Messages": {
+    "message": "messages."
+  },
+  "bot_selectOneAction": {
+    "message": "Please select at least one action."
+  },
+  "bot_upgradeFeature": {
+    "message": "Please upgrade to Pro to use this feature."
+  },
+  "bot_upgradeEnable": {
+    "message": "Please upgrade to pro to enable this feature."
+  },
+  "msg_listTip": {
+    "message": "Create a template of DM/Comment, the bot will randomly select one message from the selected template to Send DM or Comment."
+  },
+  "msg_templates": {
+    "message": "Templates"
+  },
+  "msg_type_dm": {
+    "message": "DM"
+  },
+  "msg_type_dm_plural": {
+    "message": "DMs"
+  },
+  "msg_type_comment": {
+    "message": "Comment"
+  },
+  "msg_type_comment_plural": {
+    "message": "Comments"
+  },
+  "msg_createTemplate": {
+    "message": "Create $1 Template"
+  },
+  "msg_importTemplates": {
+    "message": "Import DM Templates from Json file"
+  },
+  "msg_exportTemplates": {
+    "message": "Export DM Templates to Json file"
+  },
+  "msg_addYourTypes": {
+    "message": "Add your $1 to template"
+  },
+  "msg_step1": {
+    "message": "1. Enter template name"
+  },
+  "msg_namePlaceholder": {
+    "message": "eg. natgeo follower DMs"
+  },
+  "msg_step2": {
+    "message": "2. Enter your $1"
+  },
+  "msg_banTip1": {
+    "message": "1.To avoid your account being banned, we suggest: Avoid sending the same message to multiple people. Make sure that the content of your DMs/Comments is personalized. You can create multiple messages within a template and then the bot will randomly select one to send or comment."
+  },
+  "msg_banTip2": {
+    "message": "2.Instagram's direct messaging character length is limited to around 2000, please control the length of your characters accordingly."
+  },
+  "msg_insertUsername": {
+    "message": "Username"
+  },
+  "msg_insertFullname": {
+    "message": "Fullname"
+  },
+  "msg_addMessage": {
+    "message": "Add Message"
+  },
+  "msg_messagePlaceholder": {
+    "message": "eg. Hi <Username>, thanks! {😀|🥰}"
+  },
+  "msg_spinSyntaxTip": {
+    "message": "1.Spin syntax supported. eg.: $1 {value1|value2}"
+  },
+  "msg_filterTip": {
+    "message": "2.When the filter option is not enabled, the <Username> is not supported when the 'Select target type' option is Hashtag or Location; the <Fullname> is not supported when the 'Select target type' option is Hashtag, Location, or Commenters."
+  },
+  "msg_copyToastTitle": {
+    "message": "Success."
+  },
+  "msg_copyToastDesc": {
+    "message": "The message has been copied to the clipboard"
+  },
+  "msg_only3Messages": {
+    "message": "You can only add 3 messages in the free. upgrade to pro can add unlimited messages."
+  },
+  "msg_saveNoMessages": {
+    "message": "After creating a message, click the $1 button to add the message content to the template, then click the $2 button to save the template."
+  },
+  "pro_tableFeatures": {
+    "message": "Features"
+  },
+  "pro_tableFree": {
+    "message": "Free"
+  },
+  "pro_tablePro": {
+    "message": "Pro"
+  },
+  "pro_unlimited": {
+    "message": "unlimited"
+  },
+  "pro_feature_dailyActions": {
+    "message": "Actions for a day"
+  },
+  "pro_feature_historyCount": {
+    "message": "Task history record count"
+  },
+  "pro_feature_historyMessages": {
+    "message": "Task history record total messages count"
+  },
+  "pro_feature_botCount": {
+    "message": "Bot count"
+  },
+  "pro_feature_templateCount": {
+    "message": "Template count"
+  },
+  "pro_feature_templateMessages": {
+    "message": "Template messages count"
+  },
+  "pro_feature_blacklist": {
+    "message": "Enable Blacklist"
+  },
+  "pro_feature_exportConfig": {
+    "message": "Export/Import Robot Configuration"
+  },
+  "pro_feature_exportTemplates": {
+    "message": "Export/Import DM Templates"
+  },
+  "pro_feature_exportHistory": {
+    "message": "Export/Import Task History Records"
+  },
+  "pro_feature_advancedFilter": {
+    "message": "Advanced Filter"
+  },
+  "pro_feature_commentersLikers": {
+    "message": "Actions to commenters/likers of post"
+  },
+  "pro_feature_hashtagLocation": {
+    "message": "Actions by Hashtag/Location"
+  },
+  "pro_feature_followersFollowing": {
+    "message": "Actions to followers/following"
+  },
+  "pro_feature_customUsers": {
+    "message": "Actions to custom users"
+  },
+  "pro_feature_csvUsers": {
+    "message": "Actions to custom users from a CSV file"
+  },
+  "pro_feature_hyperTexts": {
+    "message": "Send Hyper Personalized Texts"
+  },
+  "pro_superVip": {
+    "message": "You are Super Vip now, can access all pro features."
+  },
+  "pro_trialPeriod": {
+    "message": "Pro trial period, Your access to the Pro features expires on $1."
+  },
+  "pro_cancelledSub": {
+    "message": "You cancelled your Pro subscription. Your access to the Pro features expires on $1."
+  },
+  "pro_pastDue": {
+    "message": "The payment subscription was unsuccessful. Your access to the Pro features expires on $1."
+  },
+  "pro_updatePayment": {
+    "message": "Update payment method"
+  },
+  "pro_unsubscribe": {
+    "message": "UNSUBSCRIBE"
+  },
+  "pro_trialSignup": {
+    "message": "Sign in/up for $1-day free Pro trial"
+  },
+  "pro_trialSignupFree": {
+    "message": "Sign in/up for free"
+  },
+  "pro_subscribedInfo": {
+    "message": "You have successfully subscribed and unlocked all Pro features.You can reach us anytime at $1, and we will respond to you within 24 hours."
+  },
+  "pro_subscribeNow": {
+    "message": "SUBSCRIBE NOW"
+  },
+  "pro_paymentDisclaimer": {
+    "message": "We use the third-party authoritative payment platform to process purchases and do not know your card details."
+  },
+  "history_view": {
+    "message": "View History"
+  },
+  "ext_more": {
+    "message": "More Extensions"
+  },
+  "alert_selectBotFirst": {
+    "message": "Please select a DM bot first."
+  },
+  "alert_excludeNoHistory": {
+    "message": "You select \"$1\", but no history found."
+  },
+  "alert_selectHistoryFirst": {
+    "message": "Please select a history first."
+  },
+  "alert_addCustomUsersFirst": {
+    "message": "Please add custom users first."
+  },
+  "alert_5Templates": {
+    "message": "You can only create 5 templates in the free. upgrade to pro can create unlimited templates."
+  },
+  "alert_templateInUse": {
+    "message": "This template is used by bot $1, please delete the bot first."
+  },
+  "alert_5Bots": {
+    "message": "You can only create 5 bots in the free. upgrade to pro can create unlimited bots."
+  },
+  "alert_tips": {
+    "message": "Tips"
+  },
+  "alert_perDayLimit": {
+    "message": "The number of messages sent per day has reached the limit, please upgrade to Pro to continue. Free $1 messages per day, Pro unlimited messages per day."
+  },
+  "alert_freeHistoryLimit": {
+    "message": "Free users can save a maximum of 10 recent task history items and 10,000 messages. Upgrade to Pro for more task history and unlimited message storage. Pro allows up to 100000 recent task history items and unlimited messages.To ensure the current task record can be saved, we will delete the earliest record."
+  },
+  "alert_timerFailedTitle": {
+    "message": "The task has been paused because the timer update failed."
+  },
+  "alert_timerFailedDesc": {
+    "message": "The extension could not schedule the next sending task after retrying. Please continue the task manually later."
+  },
+  "alert_404": {
+    "message": "User or data not found. It's possible that the username you've entered is in the wrong format or that the user no longer exists. Please check it."
+  },
+  "alert_rateLimitSoft": {
+    "message": "Instagram Rate limit exceeded: the requests are too frequent and the Instagram API is restricted. So please take a break for some time and try again, or change to another Instagram account."
+  },
+  "alert_rateLimitFrequency": {
+    "message": "Instagram Rate limit exceeded: Frequency limit, the requests are too frequent and the Instagram API is restricted. So please take a break for some time and try again, or change to another Instagram account."
+  },
+  "alert_rateLimitHard": {
+    "message": "Instagram Rate limit exceeded: Hard limit, the requests are too frequent and the Instagram API is restricted. So please take a break for some time and try again, or change to another Instagram account."
+  },
+  "alert_rateLimitGeneral": {
+    "message": "Instagram Rate limit exceeded: It may be that the requests are too frequent and the Instagram API is restricted. So please take a break for some time and try again, or change to another Instagram account."
+  },
+  "alert_403": {
+    "message": "1.The current user has disabled the direct messaging feature; therefore, you are unable to send them a direct message. 2.Or Instagram Rate limit exceeded: Soft limit, the requests are too frequent and the Instagram API is restricted. So please take a break for some time and try again, or change to another Instagram account."
+  },
+  "alert_401": {
+    "message": "Your Instagram login session might have expired. Please opening https://www.instagram.com/ to log in again."
+  },
+  "alert_999Error": {
+    "message": "999 Error: $1"
+  },
+  "alert_unknownError": {
+    "message": "Instagram network request returned an unknown error."
+  },
+  "alert_taskSuspended": {
+    "message": "🛑The current task has been suspended."
+  },
+  "alert_willContinue": {
+    "message": "🚀After your specified time interval, It will continue attempting to the next user."
+  },
+  "alert_checkUser": {
+    "message": "Please check the user: $1"
+  },
+  "content_upgradeTip1": {
+    "message": "upgrading to pro to unlock a wider"
+  },
+  "content_upgradeTip2": {
+    "message": "range of advanced features."
+  },
+  "content_upgradeButton": {
+    "message": "Upgrade to Pro"
+  },
+  "content_warn1Before": {
+    "message": "1.The current page is the"
+  },
+  "content_warn1Mid": {
+    "message": "working page, please"
+  },
+  "content_warn1DontClose": {
+    "message": "don't close"
+  },
+  "content_warn1After": {
+    "message": "this window."
+  },
+  "content_warn2Before": {
+    "message": "2.Please"
+  },
+  "content_warn2KeepActive": {
+    "message": "keep the computer active"
+  },
+  "content_warn2After": {
+    "message": ". If it goes into sleep mode, the task will be paused until the computer wakes up again."
+  },
+  "content_bgNewsBefore": {
+    "message": "Great news! The IG Growth Auto Bot now"
+  },
+  "content_bgNewsHighlight": {
+    "message": "supports running in the background"
+  },
+  "content_bgNewsAfter": {
+    "message": "! You can now carry out other tasks like browsing other webpages, watching videos, or playing games while the bot takes care of sending your messages. No more need to keep the current page in the foreground. Enjoy the convenience and freedom!"
+  },
+  "content_followers": {
+    "message": "followers"
+  },
+  "content_following": {
+    "message": "following"
+  },
+  "content_posts": {
+    "message": "posts"
+  },
+  "content_tag": {
+    "message": "Tag: $1"
+  },
+  "content_location": {
+    "message": "Location: $1"
+  },
+  "content_timeInterval": {
+    "message": "Time interval(minutes):$1~$2"
+  },
+  "content_pauseEvery": {
+    "message": "Pause for $1 to $2 minutes every $3 users."
+  },
+  "content_limitMaxUsers": {
+    "message": "Limit max users:$1"
+  },
+  "content_completion": {
+    "message": "Completion! 🎉"
+  },
+  "content_savedToHistory": {
+    "message": "The task has been saved to the historical task"
+  },
+  "content_noHistory": {
+    "message": "NO HISTORY"
+  },
+  "content_pagesTotal": {
+    "message": "$1 pages in total"
+  },
+  "content_historicalTasks": {
+    "message": "$1 historical tasks"
+  },
+  "content_importHistory": {
+    "message": "Import history data"
+  },
+  "content_exportHistory": {
+    "message": "Export history data"
+  },
+  "content_deleteAll": {
+    "message": "Delete All"
+  },
+  "content_filterOptions": {
+    "message": "Filter Options:"
+  },
+  "content_filterFollowers": {
+    "message": "Followers: $1~$2"
+  },
+  "content_filterFollowing": {
+    "message": "Following: $1~$2"
+  },
+  "content_filterPosts": {
+    "message": "Posts: $1~$2"
+  },
+  "content_thId": {
+    "message": "ID"
+  },
+  "content_thBot": {
+    "message": "Bot"
+  },
+  "content_thTotal": {
+    "message": "Total"
+  },
+  "content_thActionTypes": {
+    "message": "ActionTypes"
+  },
+  "content_thActions": {
+    "message": "Actions"
+  },
+  "content_thDate": {
+    "message": "Date"
+  },
+  "content_confirmDeleteHistory": {
+    "message": "Are you sure you want to delete this history item?"
+  },
+  "content_confirmDeleteAll": {
+    "message": "Are you sure you want to delete all history?"
+  },
+  "content_importSuccess": {
+    "message": "🎉import success"
+  },
+  "content_importError": {
+    "message": "import error"
+  },
+  "content_importModeTitle": {
+    "message": "Choose import mode"
+  },
+  "content_importOverwrite": {
+    "message": "Overwrite Import"
+  },
+  "content_importOverwriteDesc": {
+    "message": "Clear existing history and keep only the records in the file."
+  },
+  "content_importIncrement": {
+    "message": "Incremental Import"
+  },
+  "content_importIncrementDesc": {
+    "message": "Keep existing history and merge the records from the file into it."
+  },
+  "content_moreDetails": {
+    "message": "Click here for more details>"
+  },
+  "log_viewLogs": {
+    "message": "View logs ($1)"
+  },
+  "log_botLogs": {
+    "message": "Bot Logs"
+  },
+  "log_noLogs": {
+    "message": "No logs available."
+  },
+  "log_copyLogs": {
+    "message": "Copy Logs"
+  },
+  "log_clearLogs": {
+    "message": "Clear Logs"
+  },
+  "log_close": {
+    "message": "Close"
+  },
+  "log_copied": {
+    "message": "The log has been copied to the clipboard!"
+  },
+  "log_additionalInfo": {
+    "message": "Additional Information:"
+  },
+  "net_error": {
+    "message": "Network error, click the button to reload."
+  },
+  "net_reload": {
+    "message": "Reload"
+  },
+  "target_followers": {
+    "message": "Followers"
+  },
+  "target_following": {
+    "message": "Following"
+  },
+  "target_likers": {
+    "message": "Likers"
+  },
+  "target_commenters": {
+    "message": "Commenters"
+  },
+  "target_hashTag": {
+    "message": "HashTag"
+  },
+  "target_location": {
+    "message": "Location"
+  },
+  "target_customUsers": {
+    "message": "Custom Users"
+  },
+  "filter_allAccounts": {
+    "message": "All Accounts"
+  },
+  "filter_privateAccounts": {
+    "message": "Private Accounts"
+  },
+  "filter_publicAccounts": {
+    "message": "Public Accounts"
+  },
+  "filter_verifiedAccounts": {
+    "message": "Verified Accounts"
+  },
+  "filter_nonVerifiedAccounts": {
+    "message": "Non-Verified Accounts"
+  },
+  "filter_businessAccounts": {
+    "message": "Business Accounts"
+  },
+  "filter_nonBusinessAccounts": {
+    "message": "Non-Business Accounts"
+  },
+  "filter_joinedRecently": {
+    "message": "Joined Recently Accounts"
+  },
+  "filter_nonJoinedRecently": {
+    "message": "Non-Joined Recently Accounts"
+  },
+  "exclude_none": {
+    "message": "None Exclude"
+  },
+  "exclude_all": {
+    "message": "Exclude all history list"
+  },
+  "exclude_allSuccess": {
+    "message": "Exclude all history success list"
+  },
+  "exclude_history": {
+    "message": "Exclude selected from history"
+  },
+  "action_dm": {
+    "message": "DM"
+  },
+  "action_comment": {
+    "message": "Comment"
+  },
+  "action_like": {
+    "message": "Like"
+  },
+  "action_follow": {
+    "message": "Follow"
+  },
+  "action_unfollow": {
+    "message": "Unfollow"
+  }
+}

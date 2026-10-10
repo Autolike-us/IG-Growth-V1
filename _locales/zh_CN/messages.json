@@ -1,0 +1,838 @@
+{
+  "extName": {
+    "message": "Growth Auto Bot- auto follow,like,DM,comment",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "A smart Facebook™ & Messenger™ tool to automatically send mass DM(direct message) to users.",
+    "description": "Smart automation bot for  Instagram™, super easy to auto Follow,Like,Comment,DM to increase exposure and gain more real followers."
+  },
+  "common_pause": {
+    "message": "暂停"
+  },
+  "common_stop": {
+    "message": "停止"
+  },
+  "common_continue": {
+    "message": "继续"
+  },
+  "common_startWorking": {
+    "message": "开始工作"
+  },
+  "common_taskInProgress": {
+    "message": "$1/$2 任务进行中..."
+  },
+  "common_detail": {
+    "message": "详情 >"
+  },
+  "common_cancel": {
+    "message": "取消"
+  },
+  "common_save": {
+    "message": "保存"
+  },
+  "common_importing": {
+    "message": "导入中..."
+  },
+  "common_exporting": {
+    "message": "导出中..."
+  },
+  "common_upgradeToPro": {
+    "message": "请升级到 Pro 以使用此功能"
+  },
+  "common_version": {
+    "message": "版本："
+  },
+  "aria_apps": {
+    "message": "应用"
+  },
+  "aria_faqs": {
+    "message": "常见问题"
+  },
+  "aria_edit": {
+    "message": "编辑"
+  },
+  "aria_delete": {
+    "message": "删除"
+  },
+  "aria_back": {
+    "message": "返回"
+  },
+  "aria_save": {
+    "message": "保存"
+  },
+  "aria_copy": {
+    "message": "复制"
+  },
+  "aria_language": {
+    "message": "语言"
+  },
+  "aria_pre": {
+    "message": "上一页"
+  },
+  "aria_next": {
+    "message": "下一页"
+  },
+  "home_versionAvailable": {
+    "message": "$1 版本可用"
+  },
+  "home_updateNow": {
+    "message": "立即更新"
+  },
+  "home_selectBot": {
+    "message": "请选择一个机器人"
+  },
+  "home_createNewBot": {
+    "message": "创建新机器人"
+  },
+  "home_selectHistory": {
+    "message": "请选择历史记录"
+  },
+  "home_noHistory": {
+    "message": "无历史记录"
+  },
+  "home_type": {
+    "message": "类型："
+  },
+  "home_targetPost": {
+    "message": "目标帖子："
+  },
+  "home_targetUsers": {
+    "message": "目标用户："
+  },
+  "home_targetLocation": {
+    "message": "目标地点："
+  },
+  "home_targetHashTag": {
+    "message": "目标话题标签："
+  },
+  "home_limitMaxUsers": {
+    "message": "用户数上限："
+  },
+  "home_timeInterval": {
+    "message": "时间间隔（分钟）："
+  },
+  "home_dmTemplate": {
+    "message": "DM 模板："
+  },
+  "home_pauseFor": {
+    "message": "暂停"
+  },
+  "home_minutesAfterEvery": {
+    "message": "分钟，每发送"
+  },
+  "home_users": {
+    "message": "名用户。"
+  },
+  "home_failWaitBefore": {
+    "message": "如果当前目标用户的任务失败，请等待"
+  },
+  "home_failWaitAfter": {
+    "message": "分钟后再移动到下一个目标用户。"
+  },
+  "home_pauseTriggerBefore": {
+    "message": "如果连续"
+  },
+  "home_pauseTriggerAfter": {
+    "message": "个目标用户失败，任务将立即暂停。"
+  },
+  "home_enableFilter": {
+    "message": "启用高级筛选选项（"
+  },
+  "home_proFeature": {
+    "message": "Pro 功能）"
+  },
+  "home_filterTip1": {
+    "message": "1.启用后，仅向符合筛选条件的用户发送 DM。"
+  },
+  "home_filterTip2": {
+    "message": "2.需要额外的请求来获取目标用户的个人资料信息。"
+  },
+  "home_upgradeClick": {
+    "message": "！这是 Pro 功能，需要升级到 Pro。点击此处升级。"
+  },
+  "home_filter": {
+    "message": "筛选"
+  },
+  "home_min": {
+    "message": "最小"
+  },
+  "home_max": {
+    "message": "最大"
+  },
+  "home_followers": {
+    "message": "粉丝"
+  },
+  "home_following": {
+    "message": "关注"
+  },
+  "home_posts": {
+    "message": "帖子"
+  },
+  "home_isPrivate": {
+    "message": "是否私密"
+  },
+  "home_isVerified": {
+    "message": "是否认证"
+  },
+  "home_isBusiness": {
+    "message": "是否商业账号"
+  },
+  "home_sessionExpiredTitle": {
+    "message": "错误：会话已过期"
+  },
+  "home_sessionExpiredBody": {
+    "message": "请前往 $1 重新登录。"
+  },
+  "home_goToLogin": {
+    "message": "前往登录"
+  },
+  "home_loginFirst": {
+    "message": "请先登录 Instagram。"
+  },
+  "home_goToInstagram": {
+    "message": "前往 Instagram"
+  },
+  "bot_listTip": {
+    "message": "创建一个机器人，设置完成后即可在首页选择它来自动发送 DM / 自动关注 / 评论 / 点赞。"
+  },
+  "bot_bots": {
+    "message": "机器人列表"
+  },
+  "bot_createBot": {
+    "message": "创建机器人"
+  },
+  "bot_importBots": {
+    "message": "从 Json 文件导入 DM 机器人"
+  },
+  "bot_exportBots": {
+    "message": "将 DM 机器人导出到 Json 文件"
+  },
+  "bot_createYourBot": {
+    "message": "创建你的机器人"
+  },
+  "bot_step1": {
+    "message": "1. 输入机器人名称"
+  },
+  "bot_namePlaceholder": {
+    "message": "例如：natgeo 粉丝机器人"
+  },
+  "bot_step2": {
+    "message": "2. 选择目标类型"
+  },
+  "bot_step3UsernameList": {
+    "message": "3.用户名列表（用逗号分隔）"
+  },
+  "bot_usernameList": {
+    "message": "用户名列表（用逗号分隔）"
+  },
+  "bot_csvTip": {
+    "message": "为避免格式错误，建议你下载“CSV 文件示例”，修改并保存文件，最后点击“从 CSV 文件导入”来导入数据。"
+  },
+  "bot_customUsersPlaceholder": {
+    "message": "例如：natgeo,spacex,nike"
+  },
+  "bot_importFromCsv": {
+    "message": "从 CSV 文件导入"
+  },
+  "bot_csvDemo": {
+    "message": "CSV 文件示例"
+  },
+  "bot_step3HashTag": {
+    "message": "3.输入 Instagram 话题标签（不含“#”符号）"
+  },
+  "bot_hashTagPlaceholder": {
+    "message": "例如：iggrowth"
+  },
+  "bot_step3Location": {
+    "message": "3.输入 Instagram 地点链接"
+  },
+  "bot_getLocationLink": {
+    "message": "获取地点链接。"
+  },
+  "bot_locationPlaceholder": {
+    "message": "例如：https://www.instagram.com/explore/locations/36044"
+  },
+  "bot_step3PostLink": {
+    "message": "3.输入 Instagram 帖子链接"
+  },
+  "bot_postLinkPlaceholder": {
+    "message": "例如：https://www.instagram.com/p/Cqnh8EJAHg0"
+  },
+  "bot_step3TargetUsername": {
+    "message": "3.输入目标 Instagram 用户名"
+  },
+  "bot_targetUsernamePlaceholder": {
+    "message": "例如：natgeo"
+  },
+  "bot_step4Actions": {
+    "message": "4.操作（至少选择一项）"
+  },
+  "bot_autoFollow": {
+    "message": "自动关注"
+  },
+  "bot_sendDm": {
+    "message": "发送 DM"
+  },
+  "bot_likePost": {
+    "message": "点赞帖子"
+  },
+  "bot_commentPost": {
+    "message": "评论帖子"
+  },
+  "bot_dmRandomTip": {
+    "message": "*使用所选 DM 模板中的随机文本发送 DM"
+  },
+  "bot_selectDmTemplate": {
+    "message": "请选择一个 DM 模板"
+  },
+  "bot_commentRandomTip": {
+    "message": "*使用所选评论模板中的随机文本进行评论"
+  },
+  "bot_selectCommentTemplate": {
+    "message": "请选择一个评论模板"
+  },
+  "bot_createTemplateLink": {
+    "message": "点击此处创建新的 DM/评论模板。"
+  },
+  "bot_step4Blacklist": {
+    "message": "4.启用黑名单"
+  },
+  "bot_blacklistTip": {
+    "message": "不会向黑名单中的用户发送 DM"
+  },
+  "bot_importBlacklistCsv": {
+    "message": "从 CSV 文件导入黑名单"
+  },
+  "bot_blacklistCsvDemo": {
+    "message": "黑名单 CSV 文件示例"
+  },
+  "bot_step5Limit": {
+    "message": "5. 用户数上限："
+  },
+  "bot_banWarning": {
+    "message": "⚠️为避免你的账号被封禁，建议：增加操作的时间间隔和暂停时间"
+  },
+  "bot_step6Interval": {
+    "message": "6. 用户之间的时间间隔（分钟）："
+  },
+  "bot_step7PauseFor": {
+    "message": "7. 暂停"
+  },
+  "bot_step7MinutesAfter": {
+    "message": "分钟，每发送"
+  },
+  "bot_step7Messages": {
+    "message": "条消息。"
+  },
+  "bot_selectOneAction": {
+    "message": "请至少选择一项操作。"
+  },
+  "bot_upgradeFeature": {
+    "message": "请升级到 Pro 以使用此功能。"
+  },
+  "bot_upgradeEnable": {
+    "message": "请升级到 Pro 以启用此功能。"
+  },
+  "msg_listTip": {
+    "message": "创建一个 DM/评论模板，机器人将从所选模板中随机选择一条消息来发送 DM 或评论。"
+  },
+  "msg_templates": {
+    "message": "模板"
+  },
+  "msg_type_dm": {
+    "message": "DM"
+  },
+  "msg_type_dm_plural": {
+    "message": "DM"
+  },
+  "msg_type_comment": {
+    "message": "评论"
+  },
+  "msg_type_comment_plural": {
+    "message": "评论"
+  },
+  "msg_createTemplate": {
+    "message": "创建 $1 模板"
+  },
+  "msg_importTemplates": {
+    "message": "从 Json 文件导入 DM 模板"
+  },
+  "msg_exportTemplates": {
+    "message": "将 DM 模板导出到 Json 文件"
+  },
+  "msg_addYourTypes": {
+    "message": "将你的 $1 添加到模板"
+  },
+  "msg_step1": {
+    "message": "1. 输入模板名称"
+  },
+  "msg_namePlaceholder": {
+    "message": "例如：natgeo 粉丝 DM"
+  },
+  "msg_step2": {
+    "message": "2. 输入你的 $1"
+  },
+  "msg_banTip1": {
+    "message": "1.为避免你的账号被封禁，建议：避免向多人发送相同的消息。确保你的 DM/评论内容是个性化的。你可以在一个模板中创建多条消息，机器人会随机选择一条来发送或评论。"
+  },
+  "msg_banTip2": {
+    "message": "2.Instagram 私信的字符长度限制约为 2000，请相应控制内容的长度。"
+  },
+  "msg_insertUsername": {
+    "message": "用户名"
+  },
+  "msg_insertFullname": {
+    "message": "全名"
+  },
+  "msg_addMessage": {
+    "message": "添加消息"
+  },
+  "msg_messagePlaceholder": {
+    "message": "例如：你好 <Username>，谢谢！{😀|🥰}"
+  },
+  "msg_spinSyntaxTip": {
+    "message": "1.支持 Spin 语法。例如：$1 {value1|value2}"
+  },
+  "msg_filterTip": {
+    "message": "2.未启用筛选选项时，当“选择目标类型”为话题标签或地点时，不支持 <Username>；当“选择目标类型”为话题标签、地点或评论者时，不支持 <Fullname>。"
+  },
+  "msg_copyToastTitle": {
+    "message": "成功。"
+  },
+  "msg_copyToastDesc": {
+    "message": "消息已复制到剪贴板"
+  },
+  "msg_only3Messages": {
+    "message": "免费版最多只能添加 3 条消息。升级到 Pro 可添加无限条消息。"
+  },
+  "msg_saveNoMessages": {
+    "message": "每创建一条消息后，需点击$1按钮添加消息内容到模板，然后再点击 $2 按钮保存模板。"
+  },
+  "pro_tableFeatures": {
+    "message": "功能"
+  },
+  "pro_tableFree": {
+    "message": "免费"
+  },
+  "pro_tablePro": {
+    "message": "Pro"
+  },
+  "pro_unlimited": {
+    "message": "无限制"
+  },
+  "pro_feature_dailyActions": {
+    "message": "每日操作次数"
+  },
+  "pro_feature_historyCount": {
+    "message": "任务历史记录条数"
+  },
+  "pro_feature_historyMessages": {
+    "message": "任务历史记录总消息数"
+  },
+  "pro_feature_botCount": {
+    "message": "机器人数量"
+  },
+  "pro_feature_templateCount": {
+    "message": "模板数量"
+  },
+  "pro_feature_templateMessages": {
+    "message": "模板消息条数"
+  },
+  "pro_feature_blacklist": {
+    "message": "启用黑名单"
+  },
+  "pro_feature_exportConfig": {
+    "message": "导出/导入机器人配置"
+  },
+  "pro_feature_exportTemplates": {
+    "message": "导出/导入 DM 模板"
+  },
+  "pro_feature_exportHistory": {
+    "message": "导出/导入任务历史记录"
+  },
+  "pro_feature_advancedFilter": {
+    "message": "高级筛选"
+  },
+  "pro_feature_commentersLikers": {
+    "message": "对帖子的评论者/点赞者进行操作"
+  },
+  "pro_feature_hashtagLocation": {
+    "message": "按话题标签/地点进行操作"
+  },
+  "pro_feature_followersFollowing": {
+    "message": "对粉丝/关注列表进行操作"
+  },
+  "pro_feature_customUsers": {
+    "message": "对自定义用户进行操作"
+  },
+  "pro_feature_csvUsers": {
+    "message": "对来自 CSV 文件的自定义用户进行操作"
+  },
+  "pro_feature_hyperTexts": {
+    "message": "发送超个性化文本"
+  },
+  "pro_superVip": {
+    "message": "你现在是超级 VIP，可以使用所有 Pro 功能。"
+  },
+  "pro_trialPeriod": {
+    "message": "Pro 试用期，你的 Pro 功能访问权限将于 $1 到期。"
+  },
+  "pro_cancelledSub": {
+    "message": "你已取消 Pro 订阅。你的 Pro 功能访问权限将于 $1 到期。"
+  },
+  "pro_pastDue": {
+    "message": "付款订阅未成功。你的 Pro 功能访问权限将于 $1 到期。"
+  },
+  "pro_updatePayment": {
+    "message": "更新付款方式"
+  },
+  "pro_unsubscribe": {
+    "message": "取消订阅"
+  },
+  "pro_trialSignup": {
+    "message": "登录/注册以获得 $1 天免费 Pro 试用"
+  },
+  "pro_trialSignupFree": {
+    "message": "免费登录/注册"
+  },
+  "pro_subscribedInfo": {
+    "message": "你已成功订阅并解锁所有 Pro 功能。你可以随时通过 $1 联系我们，我们将在 24 小时内回复你。"
+  },
+  "pro_subscribeNow": {
+    "message": "立即订阅"
+  },
+  "pro_paymentDisclaimer": {
+    "message": "我们使用第三方权威支付平台处理购买，不会知晓你的银行卡信息。"
+  },
+  "history_view": {
+    "message": "查看历史记录"
+  },
+  "ext_more": {
+    "message": "更多扩展"
+  },
+  "alert_selectBotFirst": {
+    "message": "请先选择一个 DM 机器人。"
+  },
+  "alert_excludeNoHistory": {
+    "message": "你选择了“$1”，但未找到历史记录。"
+  },
+  "alert_selectHistoryFirst": {
+    "message": "请先选择一条历史记录。"
+  },
+  "alert_addCustomUsersFirst": {
+    "message": "请先添加自定义用户。"
+  },
+  "alert_5Templates": {
+    "message": "免费版最多只能创建 5 个模板。升级到 Pro 可创建无限个模板。"
+  },
+  "alert_templateInUse": {
+    "message": "此模板正被机器人 $1 使用，请先删除该机器人。"
+  },
+  "alert_5Bots": {
+    "message": "免费版最多只能创建 5 个机器人。升级到 Pro 可创建无限个机器人。"
+  },
+  "alert_tips": {
+    "message": "提示"
+  },
+  "alert_perDayLimit": {
+    "message": "每日发送的消息数量已达上限，请升级到 Pro 以继续。免费版每天 $1 条消息，Pro 每天无限条消息。"
+  },
+  "alert_freeHistoryLimit": {
+    "message": "免费用户最多可保存 10 条最近的任务历史记录和 10,000 条消息。升级到 Pro 可获得更多任务历史记录和无限消息存储。Pro 最多可保存 100000 条最近的任务历史记录和无限消息。为确保当前任务记录能够保存，我们将删除最早的记录。"
+  },
+  "alert_timerFailedTitle": {
+    "message": "由于定时器更新失败，任务已暂停。"
+  },
+  "alert_timerFailedDesc": {
+    "message": "扩展重试后仍无法安排下一次发送任务。请稍后手动继续任务。"
+  },
+  "alert_404": {
+    "message": "未找到用户或数据。可能是输入的用户名格式错误，或该用户已不存在。请检查。"
+  },
+  "alert_rateLimitSoft": {
+    "message": "已超出 Instagram 频率限制：请求过于频繁，Instagram API 受到限制。请休息一段时间后再试，或更换其他 Instagram 账号。"
+  },
+  "alert_rateLimitFrequency": {
+    "message": "已超出 Instagram 频率限制：频率限制，请求过于频繁，Instagram API 受到限制。请休息一段时间后再试，或更换其他 Instagram 账号。"
+  },
+  "alert_rateLimitHard": {
+    "message": "已超出 Instagram 频率限制：硬性限制，请求过于频繁，Instagram API 受到限制。请休息一段时间后再试，或更换其他 Instagram 账号。"
+  },
+  "alert_rateLimitGeneral": {
+    "message": "已超出 Instagram 频率限制：可能是请求过于频繁，Instagram API 受到限制。请休息一段时间后再试，或更换其他 Instagram 账号。"
+  },
+  "alert_403": {
+    "message": "1.当前用户已禁用私信功能，因此无法向其发送私信。2.或者已超出 Instagram 频率限制：软性限制，请求过于频繁，Instagram API 受到限制。请休息一段时间后再试，或更换其他 Instagram 账号。"
+  },
+  "alert_401": {
+    "message": "你的 Instagram 登录会话可能已过期。请打开 https://www.instagram.com/ 重新登录。"
+  },
+  "alert_999Error": {
+    "message": "999 错误：$1"
+  },
+  "alert_unknownError": {
+    "message": "Instagram 网络请求返回未知错误。"
+  },
+  "alert_taskSuspended": {
+    "message": "🛑当前任务已被暂停。"
+  },
+  "alert_willContinue": {
+    "message": "🚀在你指定的时间间隔后，将继续尝试下一个用户。"
+  },
+  "alert_checkUser": {
+    "message": "请检查用户：$1"
+  },
+  "content_upgradeTip1": {
+    "message": "升级到 Pro 以解锁更丰富的"
+  },
+  "content_upgradeTip2": {
+    "message": "高级功能。"
+  },
+  "content_upgradeButton": {
+    "message": "升级到 Pro"
+  },
+  "content_warn1Before": {
+    "message": "1.当前页面是"
+  },
+  "content_warn1Mid": {
+    "message": "的工作页面，请"
+  },
+  "content_warn1DontClose": {
+    "message": "不要关闭"
+  },
+  "content_warn1After": {
+    "message": "该窗口。"
+  },
+  "content_warn2Before": {
+    "message": "2.请"
+  },
+  "content_warn2KeepActive": {
+    "message": "保持电脑处于唤醒状态"
+  },
+  "content_warn2After": {
+    "message": "。如果电脑进入休眠模式，任务将暂停，直到电脑重新唤醒。"
+  },
+  "content_bgNewsBefore": {
+    "message": "好消息！IG Growth Auto Bot 现在"
+  },
+  "content_bgNewsHighlight": {
+    "message": "支持在后台运行"
+  },
+  "content_bgNewsAfter": {
+    "message": "！你可以在机器人发送消息的同时进行其他操作，比如浏览其他网页、看视频或玩游戏。无需再将当前页面保持在前台。享受便捷与自由吧！"
+  },
+  "content_followers": {
+    "message": "粉丝"
+  },
+  "content_following": {
+    "message": "关注"
+  },
+  "content_posts": {
+    "message": "帖子"
+  },
+  "content_tag": {
+    "message": "话题标签：$1"
+  },
+  "content_location": {
+    "message": "地点：$1"
+  },
+  "content_timeInterval": {
+    "message": "时间间隔（分钟）：$1~$2"
+  },
+  "content_pauseEvery": {
+    "message": "每发送 $3 名用户暂停 $1 至 $2 分钟。"
+  },
+  "content_limitMaxUsers": {
+    "message": "用户数上限：$1"
+  },
+  "content_completion": {
+    "message": "完成！🎉"
+  },
+  "content_savedToHistory": {
+    "message": "任务已保存到历史任务"
+  },
+  "content_noHistory": {
+    "message": "无历史记录"
+  },
+  "content_pagesTotal": {
+    "message": "共 $1 页"
+  },
+  "content_historicalTasks": {
+    "message": "$1 条历史任务"
+  },
+  "content_importHistory": {
+    "message": "导入历史数据"
+  },
+  "content_exportHistory": {
+    "message": "导出历史数据"
+  },
+  "content_deleteAll": {
+    "message": "全部删除"
+  },
+  "content_filterOptions": {
+    "message": "筛选选项："
+  },
+  "content_filterFollowers": {
+    "message": "粉丝：$1~$2"
+  },
+  "content_filterFollowing": {
+    "message": "关注：$1~$2"
+  },
+  "content_filterPosts": {
+    "message": "帖子：$1~$2"
+  },
+  "content_thId": {
+    "message": "ID"
+  },
+  "content_thBot": {
+    "message": "机器人"
+  },
+  "content_thTotal": {
+    "message": "总数"
+  },
+  "content_thActionTypes": {
+    "message": "操作类型"
+  },
+  "content_thActions": {
+    "message": "操作"
+  },
+  "content_thDate": {
+    "message": "日期"
+  },
+  "content_confirmDeleteHistory": {
+    "message": "确定要删除这条历史记录吗？"
+  },
+  "content_confirmDeleteAll": {
+    "message": "确定要删除所有历史记录吗？"
+  },
+  "content_importSuccess": {
+    "message": "🎉导入成功"
+  },
+  "content_importError": {
+    "message": "导入失败"
+  },
+  "content_importModeTitle": {
+    "message": "选择导入方式"
+  },
+  "content_importOverwrite": {
+    "message": "覆盖导入"
+  },
+  "content_importOverwriteDesc": {
+    "message": "清空现有历史记录，仅保留文件中的记录。"
+  },
+  "content_importIncrement": {
+    "message": "增量导入"
+  },
+  "content_importIncrementDesc": {
+    "message": "保留现有历史记录，将文件中的记录合并进来。"
+  },
+  "content_moreDetails": {
+    "message": "点击此处查看详情>"
+  },
+  "log_viewLogs": {
+    "message": "查看日志（$1）"
+  },
+  "log_botLogs": {
+    "message": "机器人日志"
+  },
+  "log_noLogs": {
+    "message": "暂无日志。"
+  },
+  "log_copyLogs": {
+    "message": "复制日志"
+  },
+  "log_clearLogs": {
+    "message": "清空日志"
+  },
+  "log_close": {
+    "message": "关闭"
+  },
+  "log_copied": {
+    "message": "日志已复制到剪贴板！"
+  },
+  "log_additionalInfo": {
+    "message": "附加信息："
+  },
+  "net_error": {
+    "message": "网络错误，点击按钮重新加载。"
+  },
+  "net_reload": {
+    "message": "重新加载"
+  },
+  "target_followers": {
+    "message": "粉丝"
+  },
+  "target_following": {
+    "message": "关注"
+  },
+  "target_likers": {
+    "message": "点赞用户"
+  },
+  "target_commenters": {
+    "message": "评论用户"
+  },
+  "target_hashTag": {
+    "message": "话题标签"
+  },
+  "target_location": {
+    "message": "地点"
+  },
+  "target_customUsers": {
+    "message": "自定义用户"
+  },
+  "filter_allAccounts": {
+    "message": "所有账号"
+  },
+  "filter_privateAccounts": {
+    "message": "私密账号"
+  },
+  "filter_publicAccounts": {
+    "message": "公开账号"
+  },
+  "filter_verifiedAccounts": {
+    "message": "认证账号"
+  },
+  "filter_nonVerifiedAccounts": {
+    "message": "非认证账号"
+  },
+  "filter_businessAccounts": {
+    "message": "商业账号"
+  },
+  "filter_nonBusinessAccounts": {
+    "message": "非商业账号"
+  },
+  "filter_joinedRecently": {
+    "message": "近期注册账号"
+  },
+  "filter_nonJoinedRecently": {
+    "message": "非近期注册账号"
+  },
+  "exclude_none": {
+    "message": "不排除"
+  },
+  "exclude_all": {
+    "message": "排除所有历史记录"
+  },
+  "exclude_allSuccess": {
+    "message": "排除历史记录中成功的"
+  },
+  "exclude_history": {
+    "message": "排除选定的历史记录"
+  },
+  "action_dm": {
+    "message": "DM"
+  },
+  "action_comment": {
+    "message": "评论"
+  },
+  "action_like": {
+    "message": "点赞"
+  },
+  "action_follow": {
+    "message": "关注"
+  },
+  "action_unfollow": {
+    "message": "取消关注"
+  }
+}

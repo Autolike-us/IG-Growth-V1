@@ -1,0 +1,838 @@
+{
+  "extName": {
+    "message": "Growth Auto Bot- auto follow,like,DM,comment",
+    "description": "Name of the extension"
+  },
+  "extDescription": {
+    "message": "A smart Facebook™ & Messenger™ tool to automatically send mass DM(direct message) to users.",
+    "description": "Smart automation bot for  Instagram™, super easy to auto Follow,Like,Comment,DM to increase exposure and gain more real followers."
+  },
+  "common_pause": {
+    "message": "Pause"
+  },
+  "common_stop": {
+    "message": "Stop"
+  },
+  "common_continue": {
+    "message": "Fortsetzen"
+  },
+  "common_startWorking": {
+    "message": "Arbeit starten"
+  },
+  "common_taskInProgress": {
+    "message": "$1/$2 Aufgabe läuft..."
+  },
+  "common_detail": {
+    "message": "Detail >"
+  },
+  "common_cancel": {
+    "message": "Abbrechen"
+  },
+  "common_save": {
+    "message": "Speichern"
+  },
+  "common_importing": {
+    "message": "Importiere..."
+  },
+  "common_exporting": {
+    "message": "Exportiere..."
+  },
+  "common_upgradeToPro": {
+    "message": "Bitte upgraden Sie auf Pro, um diese Funktion zu nutzen"
+  },
+  "common_version": {
+    "message": "Version:"
+  },
+  "aria_apps": {
+    "message": "Apps"
+  },
+  "aria_faqs": {
+    "message": "FAQs"
+  },
+  "aria_edit": {
+    "message": "Bearbeiten"
+  },
+  "aria_delete": {
+    "message": "Löschen"
+  },
+  "aria_back": {
+    "message": "Zurück"
+  },
+  "aria_save": {
+    "message": "Speichern"
+  },
+  "aria_copy": {
+    "message": "Kopieren"
+  },
+  "aria_language": {
+    "message": "Sprache"
+  },
+  "aria_pre": {
+    "message": "zurück"
+  },
+  "aria_next": {
+    "message": "weiter"
+  },
+  "home_versionAvailable": {
+    "message": "Version $1 ist verfügbar"
+  },
+  "home_updateNow": {
+    "message": "Jetzt aktualisieren"
+  },
+  "home_selectBot": {
+    "message": "Bitte wählen Sie einen Bot"
+  },
+  "home_createNewBot": {
+    "message": "Neuen Bot erstellen"
+  },
+  "home_selectHistory": {
+    "message": "Bitte wählen Sie einen Verlauf"
+  },
+  "home_noHistory": {
+    "message": "Kein Verlauf"
+  },
+  "home_type": {
+    "message": "Typ:"
+  },
+  "home_targetPost": {
+    "message": "Ziel-Post:"
+  },
+  "home_targetUsers": {
+    "message": "Zielbenutzer:"
+  },
+  "home_targetLocation": {
+    "message": "Ziel-Standort:"
+  },
+  "home_targetHashTag": {
+    "message": "Ziel-Hashtag:"
+  },
+  "home_limitMaxUsers": {
+    "message": "Max. Benutzeranzahl:"
+  },
+  "home_timeInterval": {
+    "message": "Zeitintervall (Minuten):"
+  },
+  "home_dmTemplate": {
+    "message": "DM-Vorlage:"
+  },
+  "home_pauseFor": {
+    "message": "Pause für"
+  },
+  "home_minutesAfterEvery": {
+    "message": "Minuten nach dem Senden von jeweils"
+  },
+  "home_users": {
+    "message": "Benutzern."
+  },
+  "home_failWaitBefore": {
+    "message": "Wenn die Aufgabe für den aktuellen Zielbenutzer fehlschlägt, warten"
+  },
+  "home_failWaitAfter": {
+    "message": "Minute(n), bevor zum nächsten Zielbenutzer übergegangen wird."
+  },
+  "home_pauseTriggerBefore": {
+    "message": "Die Aufgabe wird sofort pausiert, wenn"
+  },
+  "home_pauseTriggerAfter": {
+    "message": "aufeinanderfolgende Zielbenutzer fehlschlagen."
+  },
+  "home_enableFilter": {
+    "message": "Erweiterte Filteroptionen aktivieren("
+  },
+  "home_proFeature": {
+    "message": "Pro-Funktion)"
+  },
+  "home_filterTip1": {
+    "message": "1.Nach der Aktivierung werden nur DMs an Benutzer gesendet, die die Filterkriterien erfüllen."
+  },
+  "home_filterTip2": {
+    "message": "2.Eine zusätzliche Anfrage zum Abrufen der Profilinformationen des Zielbenutzers."
+  },
+  "home_upgradeClick": {
+    "message": "!Dies ist eine Pro-Funktion und erfordert ein Upgrade auf Pro. Klicken Sie hier, um zu upgraden."
+  },
+  "home_filter": {
+    "message": "Filter"
+  },
+  "home_min": {
+    "message": "Min"
+  },
+  "home_max": {
+    "message": "Max"
+  },
+  "home_followers": {
+    "message": "Follower"
+  },
+  "home_following": {
+    "message": "Folge ich"
+  },
+  "home_posts": {
+    "message": "Beiträge"
+  },
+  "home_isPrivate": {
+    "message": "Ist privat"
+  },
+  "home_isVerified": {
+    "message": "Ist verifiziert"
+  },
+  "home_isBusiness": {
+    "message": "Ist Geschäft"
+  },
+  "home_sessionExpiredTitle": {
+    "message": "Fehler: Sitzung abgelaufen"
+  },
+  "home_sessionExpiredBody": {
+    "message": "Bitte gehen Sie zu $1, um sich erneut anzumelden."
+  },
+  "home_goToLogin": {
+    "message": "Zur Anmeldung"
+  },
+  "home_loginFirst": {
+    "message": "Bitte melden Sie sich zuerst bei Instagram an."
+  },
+  "home_goToInstagram": {
+    "message": "Zu Instagram gehen"
+  },
+  "bot_listTip": {
+    "message": "Erstellen Sie einen Bot, der nach der Einrichtung auf der Startseite ausgewählt werden kann, um DMs zu senden / automatisch zu folgen / zu kommentieren / zu liken."
+  },
+  "bot_bots": {
+    "message": "Bots"
+  },
+  "bot_createBot": {
+    "message": "Bot erstellen"
+  },
+  "bot_importBots": {
+    "message": "DM-Bots aus Json-Datei importieren"
+  },
+  "bot_exportBots": {
+    "message": "DM-Bots in Json-Datei exportieren"
+  },
+  "bot_createYourBot": {
+    "message": "Erstellen Sie Ihren Bot"
+  },
+  "bot_step1": {
+    "message": "1. Bot-Namen eingeben"
+  },
+  "bot_namePlaceholder": {
+    "message": "z. B. natgeo Follower Bot"
+  },
+  "bot_step2": {
+    "message": "2. Zieltyp auswählen"
+  },
+  "bot_step3UsernameList": {
+    "message": "3.Benutzerliste (durch Komma getrennt)"
+  },
+  "bot_usernameList": {
+    "message": "Benutzerliste (durch Komma getrennt)"
+  },
+  "bot_csvTip": {
+    "message": "Um Formatfehler zu vermeiden, empfehlen wir Ihnen, die 'CSV-Datei-Demo' herunterzuladen, die Datei zu bearbeiten und zu speichern und schließlich auf 'aus CSV-Datei importieren' zu klicken, um die Daten zu importieren."
+  },
+  "bot_customUsersPlaceholder": {
+    "message": "z. B. natgeo,spacex,nike"
+  },
+  "bot_importFromCsv": {
+    "message": "aus CSV-Datei importieren"
+  },
+  "bot_csvDemo": {
+    "message": "CSV-Datei-Demo"
+  },
+  "bot_step3HashTag": {
+    "message": "3.Instagram-Hashtag eingeben (ohne das Symbol '#')"
+  },
+  "bot_hashTagPlaceholder": {
+    "message": "z. B.: iggrowth"
+  },
+  "bot_step3Location": {
+    "message": "3.Instagram-Standortlink eingeben"
+  },
+  "bot_getLocationLink": {
+    "message": "Standortlink abrufen."
+  },
+  "bot_locationPlaceholder": {
+    "message": "z. B.: https://www.instagram.com/explore/locations/36044"
+  },
+  "bot_step3PostLink": {
+    "message": "3.Instagram-Postlink eingeben"
+  },
+  "bot_postLinkPlaceholder": {
+    "message": "z. B.: https://www.instagram.com/p/Cqnh8EJAHg0"
+  },
+  "bot_step3TargetUsername": {
+    "message": "3.Ziel-Instagram-Benutzernamen eingeben"
+  },
+  "bot_targetUsernamePlaceholder": {
+    "message": "z. B. natgeo"
+  },
+  "bot_step4Actions": {
+    "message": "4.Aktionen (wählen Sie mindestens eine Aktion)"
+  },
+  "bot_autoFollow": {
+    "message": "Auto-Follow"
+  },
+  "bot_sendDm": {
+    "message": "DM senden"
+  },
+  "bot_likePost": {
+    "message": "Post liken"
+  },
+  "bot_commentPost": {
+    "message": "Post kommentieren"
+  },
+  "bot_dmRandomTip": {
+    "message": "*DM mit zufälligem Text aus der ausgewählten DM-Vorlage senden"
+  },
+  "bot_selectDmTemplate": {
+    "message": "Bitte wählen Sie eine DM-Vorlage"
+  },
+  "bot_commentRandomTip": {
+    "message": "*Kommentieren mit zufälligem Text aus der ausgewählten Kommentarvorlage"
+  },
+  "bot_selectCommentTemplate": {
+    "message": "Bitte wählen Sie eine Kommentarvorlage"
+  },
+  "bot_createTemplateLink": {
+    "message": "Klicken Sie hier, um eine neue DM-/Kommentarvorlage zu erstellen."
+  },
+  "bot_step4Blacklist": {
+    "message": "4.Blacklist aktivieren"
+  },
+  "bot_blacklistTip": {
+    "message": "sendet keine DMs an Benutzer auf der Blacklist"
+  },
+  "bot_importBlacklistCsv": {
+    "message": "Blacklist aus CSV-Datei importieren"
+  },
+  "bot_blacklistCsvDemo": {
+    "message": "Blacklist-CSV-Datei-Demo"
+  },
+  "bot_step5Limit": {
+    "message": "5. Max. Benutzeranzahl:"
+  },
+  "bot_banWarning": {
+    "message": "⚠️Um zu vermeiden, dass Ihr Konto gesperrt wird, empfehlen wir: Erhöhen Sie das Zeitintervall der Aktionen und die Pausenzeit"
+  },
+  "bot_step6Interval": {
+    "message": "6. Zeitintervall zwischen Benutzern (Minuten):"
+  },
+  "bot_step7PauseFor": {
+    "message": "7. Pause für"
+  },
+  "bot_step7MinutesAfter": {
+    "message": "Minuten nach dem Senden von jeweils"
+  },
+  "bot_step7Messages": {
+    "message": "Nachrichten."
+  },
+  "bot_selectOneAction": {
+    "message": "Bitte wählen Sie mindestens eine Aktion aus."
+  },
+  "bot_upgradeFeature": {
+    "message": "Bitte upgraden Sie auf Pro, um diese Funktion zu nutzen."
+  },
+  "bot_upgradeEnable": {
+    "message": "Bitte upgraden Sie auf Pro, um diese Funktion zu aktivieren."
+  },
+  "msg_listTip": {
+    "message": "Erstellen Sie eine DM-/Kommentarvorlage; der Bot wählt zufällig eine Nachricht aus der ausgewählten Vorlage aus, um eine DM zu senden oder zu kommentieren."
+  },
+  "msg_templates": {
+    "message": "Vorlagen"
+  },
+  "msg_type_dm": {
+    "message": "DM"
+  },
+  "msg_type_dm_plural": {
+    "message": "DMs"
+  },
+  "msg_type_comment": {
+    "message": "Kommentar"
+  },
+  "msg_type_comment_plural": {
+    "message": "Kommentare"
+  },
+  "msg_createTemplate": {
+    "message": "$1-Vorlage erstellen"
+  },
+  "msg_importTemplates": {
+    "message": "DM-Vorlagen aus Json-Datei importieren"
+  },
+  "msg_exportTemplates": {
+    "message": "DM-Vorlagen in Json-Datei exportieren"
+  },
+  "msg_addYourTypes": {
+    "message": "Fügen Sie Ihre $1 zur Vorlage hinzu"
+  },
+  "msg_step1": {
+    "message": "1. Vorlagenname eingeben"
+  },
+  "msg_namePlaceholder": {
+    "message": "z. B. natgeo Follower-DMs"
+  },
+  "msg_step2": {
+    "message": "2. Geben Sie Ihre $1 ein"
+  },
+  "msg_banTip1": {
+    "message": "1.Um zu vermeiden, dass Ihr Konto gesperrt wird, empfehlen wir: Vermeiden Sie es, dieselbe Nachricht an mehrere Personen zu senden. Stellen Sie sicher, dass der Inhalt Ihrer DMs/Kommentare personalisiert ist. Sie können mehrere Nachrichten in einer Vorlage erstellen und der Bot wählt zufällig eine zum Senden oder Kommentieren aus."
+  },
+  "msg_banTip2": {
+    "message": "2.Die Zeichenlänge für direkte Nachrichten bei Instagram ist auf etwa 2000 begrenzt, bitte passen Sie die Länge Ihres Textes entsprechend an."
+  },
+  "msg_insertUsername": {
+    "message": "Benutzername"
+  },
+  "msg_insertFullname": {
+    "message": "Vollständiger Name"
+  },
+  "msg_addMessage": {
+    "message": "Nachricht hinzufügen"
+  },
+  "msg_messagePlaceholder": {
+    "message": "z. B. Hallo <Username>, danke! {😀|🥰}"
+  },
+  "msg_spinSyntaxTip": {
+    "message": "1.Spin-Syntax unterstützt, z. B.: $1 {value1|value2}"
+  },
+  "msg_filterTip": {
+    "message": "2.Wenn die Filteroption nicht aktiviert ist, wird <Username> nicht unterstützt, wenn die Option 'Zieltyp auswählen' auf Hashtag oder Standort steht; <Fullname> wird nicht unterstützt, wenn die Option auf Hashtag, Standort oder Kommentierer steht."
+  },
+  "msg_copyToastTitle": {
+    "message": "Erfolg."
+  },
+  "msg_copyToastDesc": {
+    "message": "Die Nachricht wurde in die Zwischenablage kopiert"
+  },
+  "msg_only3Messages": {
+    "message": "In der kostenlosen Version können Sie nur 3 Nachrichten hinzufügen. Ein Upgrade auf Pro ermöglicht unbegrenzte Nachrichten."
+  },
+  "msg_saveNoMessages": {
+    "message": "Nachdem Sie eine Nachricht erstellt haben, klicken Sie auf die Schaltfläche $1, um den Nachrichteninhalt zur Vorlage hinzuzufügen, und klicken Sie dann auf die Schaltfläche $2, um die Vorlage zu speichern."
+  },
+  "pro_tableFeatures": {
+    "message": "Funktionen"
+  },
+  "pro_tableFree": {
+    "message": "Kostenlos"
+  },
+  "pro_tablePro": {
+    "message": "Pro"
+  },
+  "pro_unlimited": {
+    "message": "unbegrenzt"
+  },
+  "pro_feature_dailyActions": {
+    "message": "Aktionen pro Tag"
+  },
+  "pro_feature_historyCount": {
+    "message": "Anzahl der Aufgabenverlaufsdatensätze"
+  },
+  "pro_feature_historyMessages": {
+    "message": "Gesamtanzahl der Nachrichten im Aufgabenverlauf"
+  },
+  "pro_feature_botCount": {
+    "message": "Anzahl der Bots"
+  },
+  "pro_feature_templateCount": {
+    "message": "Anzahl der Vorlagen"
+  },
+  "pro_feature_templateMessages": {
+    "message": "Anzahl der Vorlagen-Nachrichten"
+  },
+  "pro_feature_blacklist": {
+    "message": "Blacklist aktivieren"
+  },
+  "pro_feature_exportConfig": {
+    "message": "Bot-Konfiguration exportieren/importieren"
+  },
+  "pro_feature_exportTemplates": {
+    "message": "DM-Vorlagen exportieren/importieren"
+  },
+  "pro_feature_exportHistory": {
+    "message": "Aufgabenverlaufsdatensätze exportieren/importieren"
+  },
+  "pro_feature_advancedFilter": {
+    "message": "Erweiterter Filter"
+  },
+  "pro_feature_commentersLikers": {
+    "message": "Aktionen für Kommentatoren/Likes eines Posts"
+  },
+  "pro_feature_hashtagLocation": {
+    "message": "Aktionen per Hashtag/Standort"
+  },
+  "pro_feature_followersFollowing": {
+    "message": "Aktionen für Follower/Folge ich"
+  },
+  "pro_feature_customUsers": {
+    "message": "Aktionen für benutzerdefinierte Benutzer"
+  },
+  "pro_feature_csvUsers": {
+    "message": "Aktionen für benutzerdefinierte Benutzer aus einer CSV-Datei"
+  },
+  "pro_feature_hyperTexts": {
+    "message": "Hyper-personalisierte Texte senden"
+  },
+  "pro_superVip": {
+    "message": "Sie sind jetzt Super Vip und können alle Pro-Funktionen nutzen."
+  },
+  "pro_trialPeriod": {
+    "message": "Pro-Testphase, Ihr Zugriff auf die Pro-Funktionen läuft am $1 ab."
+  },
+  "pro_cancelledSub": {
+    "message": "Sie haben Ihr Pro-Abonnement gekündigt. Ihr Zugriff auf die Pro-Funktionen läuft am $1 ab."
+  },
+  "pro_pastDue": {
+    "message": "Die Zahlung des Abonnements war nicht erfolgreich. Ihr Zugriff auf die Pro-Funktionen läuft am $1 ab."
+  },
+  "pro_updatePayment": {
+    "message": "Zahlungsmethode aktualisieren"
+  },
+  "pro_unsubscribe": {
+    "message": "ABO BEENDEN"
+  },
+  "pro_trialSignup": {
+    "message": "Melden Sie sich an/registrieren Sie sich für $1 Tage kostenlose Pro-Testphase"
+  },
+  "pro_trialSignupFree": {
+    "message": "Kostenlos anmelden/registrieren"
+  },
+  "pro_subscribedInfo": {
+    "message": "Sie haben erfolgreich abonniert und alle Pro-Funktionen freigeschaltet. Sie können uns jederzeit unter $1 erreichen; wir antworten Ihnen innerhalb von 24 Stunden."
+  },
+  "pro_subscribeNow": {
+    "message": "JETZT ABONNIEREN"
+  },
+  "pro_paymentDisclaimer": {
+    "message": "Wir nutzen eine autorisierte Drittanbieter-Zahlungsplattform zur Abwicklung der Käufe und kennen Ihre Kartendaten nicht."
+  },
+  "history_view": {
+    "message": "Verlauf anzeigen"
+  },
+  "ext_more": {
+    "message": "Weitere Erweiterungen"
+  },
+  "alert_selectBotFirst": {
+    "message": "Bitte wählen Sie zuerst einen DM-Bot aus."
+  },
+  "alert_excludeNoHistory": {
+    "message": "Sie haben \"$1\" ausgewählt, aber kein Protokoll gefunden."
+  },
+  "alert_selectHistoryFirst": {
+    "message": "Bitte wählen Sie zuerst einen Verlauf aus."
+  },
+  "alert_addCustomUsersFirst": {
+    "message": "Bitte fügen Sie zuerst benutzerdefinierte Benutzer hinzu."
+  },
+  "alert_5Templates": {
+    "message": "In der kostenlosen Version können Sie nur 5 Vorlagen erstellen. Ein Upgrade auf Pro ermöglicht unbegrenzte Vorlagen."
+  },
+  "alert_templateInUse": {
+    "message": "Diese Vorlage wird vom Bot $1 verwendet, bitte löschen Sie zuerst den Bot."
+  },
+  "alert_5Bots": {
+    "message": "In der kostenlosen Version können Sie nur 5 Bots erstellen. Ein Upgrade auf Pro ermöglicht unbegrenzte Bots."
+  },
+  "alert_tips": {
+    "message": "Hinweise"
+  },
+  "alert_perDayLimit": {
+    "message": "Die Anzahl der täglich gesendeten Nachrichten hat das Limit erreicht; bitte upgraden Sie auf Pro, um fortzufahren. Kostenlos: $1 Nachrichten pro Tag, Pro: unbegrenzte Nachrichten pro Tag."
+  },
+  "alert_freeHistoryLimit": {
+    "message": "Kostenlose Benutzer können maximal 10 aktuelle Aufgabenverläufe und 10.000 Nachrichten speichern. Upgraden Sie auf Pro für mehr Aufgabenverlauf und unbegrenzte Nachrichtenspeicherung. Pro erlaubt bis zu 100000 aktuelle Aufgabenverläufe und unbegrenzte Nachrichten. Damit der aktuelle Aufgabenverlauf gespeichert werden kann, löschen wir den ältesten Datensatz."
+  },
+  "alert_timerFailedTitle": {
+    "message": "Die Aufgabe wurde pausiert, da die Aktualisierung des Timers fehlgeschlagen ist."
+  },
+  "alert_timerFailedDesc": {
+    "message": "Die Erweiterung konnte die nächste Sendeaufgabe nach dem Wiederholungsversuch nicht planen. Bitte setzen Sie die Aufgabe später manuell fort."
+  },
+  "alert_404": {
+    "message": "Benutzer oder Daten nicht gefunden. Möglicherweise hat der eingegebene Benutzername ein falsches Format oder der Benutzer existiert nicht mehr. Bitte überprüfen Sie dies."
+  },
+  "alert_rateLimitSoft": {
+    "message": "Instagram-Ratenlimit überschritten: Die Anfragen sind zu häufig und die Instagram-API ist eingeschränkt. Machen Sie daher eine Pause und versuchen Sie es erneut, oder wechseln Sie zu einem anderen Instagram-Konto."
+  },
+  "alert_rateLimitFrequency": {
+    "message": "Instagram-Ratenlimit überschritten: Häufigkeitslimit, die Anfragen sind zu häufig und die Instagram-API ist eingeschränkt. Machen Sie daher eine Pause und versuchen Sie es erneut, oder wechseln Sie zu einem anderen Instagram-Konto."
+  },
+  "alert_rateLimitHard": {
+    "message": "Instagram-Ratenlimit überschritten: Hard-Limit, die Anfragen sind zu häufig und die Instagram-API ist eingeschränkt. Machen Sie daher eine Pause und versuchen Sie es erneut, oder wechseln Sie zu einem anderen Instagram-Konto."
+  },
+  "alert_rateLimitGeneral": {
+    "message": "Instagram-Ratenlimit überschritten: Es kann sein, dass die Anfragen zu häufig sind und die Instagram-API eingeschränkt ist. Machen Sie daher eine Pause und versuchen Sie es erneut, oder wechseln Sie zu einem anderen Instagram-Konto."
+  },
+  "alert_403": {
+    "message": "1.Der aktuelle Benutzer hat die Direktnachrichtenfunktion deaktiviert; daher können Sie ihm keine Direktnachricht senden. 2.Oder Instagram-Ratenlimit überschritten: Soft-Limit, die Anfragen sind zu häufig und die Instagram-API ist eingeschränkt. Machen Sie daher eine Pause und versuchen Sie es erneut, oder wechseln Sie zu einem anderen Instagram-Konto."
+  },
+  "alert_401": {
+    "message": "Ihre Instagram-Anmeldesitzung ist möglicherweise abgelaufen. Bitte öffnen Sie https://www.instagram.com/, um sich erneut anzumelden."
+  },
+  "alert_999Error": {
+    "message": "999-Fehler: $1"
+  },
+  "alert_unknownError": {
+    "message": "Die Instagram-Netzwerkanfrage hat einen unbekannten Fehler zurückgegeben."
+  },
+  "alert_taskSuspended": {
+    "message": "🛑Die aktuelle Aufgabe wurde ausgesetzt."
+  },
+  "alert_willContinue": {
+    "message": "🚀Nach dem von Ihnen angegebenen Zeitintervall wird der Versuch mit dem nächsten Benutzer fortgesetzt."
+  },
+  "alert_checkUser": {
+    "message": "Bitte überprüfen Sie den Benutzer: $1"
+  },
+  "content_upgradeTip1": {
+    "message": "auf Pro upgraden, um ein breiteres"
+  },
+  "content_upgradeTip2": {
+    "message": "Angebot erweiterter Funktionen freizuschalten."
+  },
+  "content_upgradeButton": {
+    "message": "Auf Pro upgraden"
+  },
+  "content_warn1Before": {
+    "message": "1.Dies ist die Arbeitsseite des"
+  },
+  "content_warn1Mid": {
+    "message": ", bitte"
+  },
+  "content_warn1DontClose": {
+    "message": "schließen Sie dieses Fenster nicht"
+  },
+  "content_warn1After": {
+    "message": "."
+  },
+  "content_warn2Before": {
+    "message": "2.Bitte"
+  },
+  "content_warn2KeepActive": {
+    "message": "halten Sie den Computer aktiv"
+  },
+  "content_warn2After": {
+    "message": ". Wenn er in den Ruhezustand wechselt, wird die Aufgabe pausiert, bis der Computer wieder aufwacht."
+  },
+  "content_bgNewsBefore": {
+    "message": "Gute Neuigkeiten! Der IG Growth Auto Bot"
+  },
+  "content_bgNewsHighlight": {
+    "message": "unterstützt jetzt die Ausführung im Hintergrund"
+  },
+  "content_bgNewsAfter": {
+    "message": "! Sie können jetzt andere Aufgaben erledigen, wie andere Webseiten durchsuchen, Videos ansehen oder Spiele spielen, während der Bot sich um das Senden Ihrer Nachrichten kümmert. Sie müssen die aktuelle Seite nicht mehr im Vordergrund behalten. Genießen Sie den Komfort und die Freiheit!"
+  },
+  "content_followers": {
+    "message": "Follower"
+  },
+  "content_following": {
+    "message": "Folge ich"
+  },
+  "content_posts": {
+    "message": "Beiträge"
+  },
+  "content_tag": {
+    "message": "Tag: $1"
+  },
+  "content_location": {
+    "message": "Standort: $1"
+  },
+  "content_timeInterval": {
+    "message": "Zeitintervall (Minuten): $1~$2"
+  },
+  "content_pauseEvery": {
+    "message": "Pause von $1 bis $2 Minuten alle $3 Benutzer."
+  },
+  "content_limitMaxUsers": {
+    "message": "Max. Benutzeranzahl: $1"
+  },
+  "content_completion": {
+    "message": "Abgeschlossen! 🎉"
+  },
+  "content_savedToHistory": {
+    "message": "Die Aufgabe wurde im Aufgabenverlauf gespeichert"
+  },
+  "content_noHistory": {
+    "message": "KEIN VERLAUF"
+  },
+  "content_pagesTotal": {
+    "message": "insgesamt $1 Seiten"
+  },
+  "content_historicalTasks": {
+    "message": "$1 historische Aufgaben"
+  },
+  "content_importHistory": {
+    "message": "Verlaufsdaten importieren"
+  },
+  "content_exportHistory": {
+    "message": "Verlaufsdaten exportieren"
+  },
+  "content_deleteAll": {
+    "message": "Alle löschen"
+  },
+  "content_filterOptions": {
+    "message": "Filteroptionen:"
+  },
+  "content_filterFollowers": {
+    "message": "Follower: $1~$2"
+  },
+  "content_filterFollowing": {
+    "message": "Folge ich: $1~$2"
+  },
+  "content_filterPosts": {
+    "message": "Beiträge: $1~$2"
+  },
+  "content_thId": {
+    "message": "ID"
+  },
+  "content_thBot": {
+    "message": "Bot"
+  },
+  "content_thTotal": {
+    "message": "Gesamt"
+  },
+  "content_thActionTypes": {
+    "message": "Aktionstypen"
+  },
+  "content_thActions": {
+    "message": "Aktionen"
+  },
+  "content_thDate": {
+    "message": "Datum"
+  },
+  "content_confirmDeleteHistory": {
+    "message": "Sind Sie sicher, dass Sie diesen Verlaufseintrag löschen möchten?"
+  },
+  "content_confirmDeleteAll": {
+    "message": "Sind Sie sicher, dass Sie den gesamten Verlauf löschen möchten?"
+  },
+  "content_importSuccess": {
+    "message": "🎉Import erfolgreich"
+  },
+  "content_importError": {
+    "message": "Importfehler"
+  },
+  "content_importModeTitle": {
+    "message": "Importmodus wählen"
+  },
+  "content_importOverwrite": {
+    "message": "Überschreibender Import"
+  },
+  "content_importOverwriteDesc": {
+    "message": "Löscht den vorhandenen Verlauf und behält nur die Datensätze aus der Datei."
+  },
+  "content_importIncrement": {
+    "message": "Inkrementeller Import"
+  },
+  "content_importIncrementDesc": {
+    "message": "Behält den vorhandenen Verlauf und fügt die Datensätze aus der Datei hinzu."
+  },
+  "content_moreDetails": {
+    "message": "Klicken Sie hier für weitere Details>"
+  },
+  "log_viewLogs": {
+    "message": "Logs anzeigen ($1)"
+  },
+  "log_botLogs": {
+    "message": "Bot-Logs"
+  },
+  "log_noLogs": {
+    "message": "Keine Logs verfügbar."
+  },
+  "log_copyLogs": {
+    "message": "Logs kopieren"
+  },
+  "log_clearLogs": {
+    "message": "Logs löschen"
+  },
+  "log_close": {
+    "message": "Schließen"
+  },
+  "log_copied": {
+    "message": "Das Protokoll wurde in die Zwischenablage kopiert!"
+  },
+  "log_additionalInfo": {
+    "message": "Zusätzliche Informationen:"
+  },
+  "net_error": {
+    "message": "Netzwerkfehler, klicken Sie auf die Schaltfläche zum Neuladen."
+  },
+  "net_reload": {
+    "message": "Neu laden"
+  },
+  "target_followers": {
+    "message": "Follower"
+  },
+  "target_following": {
+    "message": "Folge ich"
+  },
+  "target_likers": {
+    "message": "Liker"
+  },
+  "target_commenters": {
+    "message": "Kommentierer"
+  },
+  "target_hashTag": {
+    "message": "Hashtag"
+  },
+  "target_location": {
+    "message": "Standort"
+  },
+  "target_customUsers": {
+    "message": "Benutzerdefinierte Benutzer"
+  },
+  "filter_allAccounts": {
+    "message": "Alle Konten"
+  },
+  "filter_privateAccounts": {
+    "message": "Private Konten"
+  },
+  "filter_publicAccounts": {
+    "message": "Öffentliche Konten"
+  },
+  "filter_verifiedAccounts": {
+    "message": "Verifizierte Konten"
+  },
+  "filter_nonVerifiedAccounts": {
+    "message": "Nicht verifizierte Konten"
+  },
+  "filter_businessAccounts": {
+    "message": "Geschäftskonten"
+  },
+  "filter_nonBusinessAccounts": {
+    "message": "Keine Geschäftskonten"
+  },
+  "filter_joinedRecently": {
+    "message": "Kürzlich beigetretene Konten"
+  },
+  "filter_nonJoinedRecently": {
+    "message": "Nicht kürzlich beigetretene Konten"
+  },
+  "exclude_none": {
+    "message": "Kein Ausschluss"
+  },
+  "exclude_all": {
+    "message": "Gesamten Verlauf ausschließen"
+  },
+  "exclude_allSuccess": {
+    "message": "Erfolgreiche Einträge des Verlaufs ausschließen"
+  },
+  "exclude_history": {
+    "message": "Ausgewählten Verlauf ausschließen"
+  },
+  "action_dm": {
+    "message": "DM"
+  },
+  "action_comment": {
+    "message": "Kommentieren"
+  },
+  "action_like": {
+    "message": "Like"
+  },
+  "action_follow": {
+    "message": "Folgen"
+  },
+  "action_unfollow": {
+    "message": "Entfolgen"
+  }
+}
