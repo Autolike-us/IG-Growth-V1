@@ -16,8 +16,7 @@
     "service_worker": "background.js"
   },
   "action": {
-    "default_title": "Open Aurora",
-    "default_popup": "popup.html"
+    "default_title": "Open Aurora"
   },
   "content_scripts": [
     {

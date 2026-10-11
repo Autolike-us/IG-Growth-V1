@@ -13,7 +13,11 @@ function updateForm(){
  $('target').placeholder=$('mode').value==='location'?'https://www.instagram.com/explore/locations/123/place/':$('mode').value==='hashtag'?'#travel or a hashtag URL':'Username or post URL, according to source';
 }
 $('mode').onchange=updateForm;$('action').onchange=()=>{$('dry').checked=true;updateForm();};
-$('task').onsubmit=async e=>{e.preventDefault();$('start').disabled=true;notice('Starting… opening your Instagram task tab.');const config=settings();if(!config.dry&&!confirm('Start live '+config.action+' task? Limit: '+config.limit+'. Target: '+config.target+(config.action==='comment'?'\nComment: '+config.comment:''))){await render();notice('Cancelled.');return;}await send('start',{config});await render();};$('save').onclick=()=>send('save',{config:settings()});
+let armed=null;
+$('task').onsubmit=async e=>{e.preventDefault();const config=settings();
+ if(!config.dry){const sig=JSON.stringify(config);if(armed!==sig){armed=sig;notice('Live '+config.action+' task: limit '+config.limit+', target '+config.target+(config.action==='comment'?', comment "'+config.comment+'"':'')+'. Click Start task again to confirm, or tick Preview only.');return;}armed=null;}
+ $('start').disabled=true;notice('Starting… opening your Instagram task tab.');try{await send('start',{config});await render();}finally{$('start').disabled=false;}};
+$('save').onclick=()=>send('save',{config:settings()});
 for(const action of ['pause','resume','stop'])$(action).onclick=()=>send(action);
 $('theme').onclick=async()=>{document.body.classList.toggle('dark');await chrome.storage.local.set({dark:document.body.classList.contains('dark')});};
 function tab(history){$('history').hidden=!history;$('studio').hidden=history;$('historyTab').classList.toggle('selected',history);$('studioTab').classList.toggle('selected',!history);}

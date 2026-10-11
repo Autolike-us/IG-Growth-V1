@@ -28,6 +28,7 @@ async function tick(){
  }catch(e){const {job}=await chrome.storage.local.get('job');if(job?.status==='running'){job.status='paused';job.message=e.message;await save(job);await chrome.alarms.clear('step');await log(e.message);}}
  finally{busy=false;}
 }
+chrome.action.onClicked.addListener(()=>chrome.tabs.create({url:chrome.runtime.getURL('dashboard.html')}));
 chrome.alarms.onAlarm.addListener(a=>{if(a.name==='step')tick();});
 chrome.runtime.onMessage.addListener((m,s,respond)=>{
  const ownPage=[chrome.runtime.getURL('dashboard.html'),chrome.runtime.getURL('popup.html')].includes(s.url?.split(/[?#]/)[0]);
