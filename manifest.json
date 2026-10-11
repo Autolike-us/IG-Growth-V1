@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "Aurora \u2022 Instagram Studio",
+  "version": "2.0.0",
+  "description": "Personal Instagram discovery, likes, follows, unfollows and comments with preview and local history.",
+  "permissions": [
+    "storage",
+    "alarms",
+    "unlimitedStorage",
+    "tabs"
+  ],
+  "host_permissions": [
+    "https://www.instagram.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Open Aurora",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.instagram.com/*"
+      ],
+      "js": [
+        "selectors.js",
+        "dom.js",
+        "content.js",
+        "panel.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
