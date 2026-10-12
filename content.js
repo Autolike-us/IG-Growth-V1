@@ -145,14 +145,17 @@
    if(!actor)throw Error('Cannot identify the signed-in account. Refresh Instagram.');
    const key=`${actor}:comment:${S.pageKey(location.href)}`;
    const {receipts={}}=await chrome.storage.local.get('receipts');if(receipts[key])return {message:'Skipped: Aurora already attempted a comment on this post. No duplicate sent.'};
-   if(field.value.trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
+   if(field.value.trim()&&field.value.trim()!==c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
    const want=c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim();
    const ownComment=()=>D.commentRows(D.scope()||root).some(row=>D.names(row)[0]===actor&&row.textContent.includes(want));
    if(ownComment())return {message:'Skipped: your comment is already visible.'};
    await active(id);await think(500,1400);
+   // Let the page finish loading and re-rendering before typing; Instagram resets the box while it hydrates.
+   {const t0=Date.now();while(document.readyState!=='complete'&&Date.now()-t0<15000){await active(id);await wait(300);}await think(1500,2800);
+    let prev=findField(),still=0;while(still<4&&Date.now()-t0<25000){await active(id);await wait(400);const cur=findField();if(cur&&cur===prev)still++;else{still=0;prev=cur;}}}
    const setter=Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype,'value').set;
-   await typeHuman(want,id,async ch=>{const f=findField();if(!f)throw Error('The comment box disappeared while typing. Nothing was submitted.');f.focus();f.dispatchEvent(new KeyboardEvent('keydown',{key:ch,bubbles:true}));setter.call(f,f.value+ch);f.dispatchEvent(new InputEvent('input',{bubbles:true,data:ch,inputType:'insertText'}));f.dispatchEvent(new KeyboardEvent('keyup',{key:ch,bubbles:true}));});
-   {const f=findField();T('typed',[...want].length,'characters');if(!f||f.value.trim()!==want)throw Error('Typing did not complete as expected. Nothing was submitted.');}
+   let typed='';await typeHuman(want,id,async ch=>{const f=findField();if(!f)throw Error('The comment box disappeared while typing. Nothing was submitted.');f.focus();if(f.value!==typed){T('box was reset while typing; restoring');setter.call(f,typed);f.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText'}));}typed+=ch;f.dispatchEvent(new KeyboardEvent('keydown',{key:ch,bubbles:true}));setter.call(f,typed);f.dispatchEvent(new InputEvent('input',{bubbles:true,data:ch,inputType:'insertText'}));f.dispatchEvent(new KeyboardEvent('keyup',{key:ch,bubbles:true}));});
+   {let f=findField();if(f&&f.value!==want){T('final text mismatch; restoring');f.focus();setter.call(f,want);f.dispatchEvent(new InputEvent('input',{bubbles:true,inputType:'insertText'}));await wait(400);f=findField();}T('typed',[...want].length,'characters');if(!f||f.value.trim()!==want)throw Error('Typing did not complete as expected. Nothing was submitted.');}
    const submit=await until(()=>{const f=findField(),form=f&&(f.closest('form')||f.parentElement),b=form&&D.button(form,'Post');return b&&!b.disabled&&b.getAttribute('aria-disabled')!=='true'?b:null;},id,5000);T('post button found',!!submit,'box still attached',field.isConnected);
    if(!submit)throw Error('Comment prepared but Post control is unavailable. Nothing was submitted.');
    return perform(key,id,()=>submit.click(),()=>{const f=findField();return (!f||!f.value.trim())&&ownComment();},'Posted your comment.');
