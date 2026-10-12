@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.3.0
+- **Faster start.** The pacing wait now applies after each action, not after reading a profile or skipping a post, so the first action begins about 10 seconds after you press Start instead of waiting a full delay first. The wait between actions is unchanged (never shorter than your setting, plus the random extra).
+
+## 2.2.2
+- **Your own posts are never liked or commented on**; they are skipped with a message (parity with the TikTok build).
+
+## 2.2.1
+- **Fixed: comment steps stopped with `Cannot read properties of null (reading 'querySelectorAll')`.** Instagram can replace the comment box while text is typed; Aurora now looks the box up fresh each time instead of holding on to one element, and confirms the comment against the live page. Nothing was ever submitted when this error occurred.
+- Page helpers no longer throw when an element disappears mid-step; the debug log now includes the page-side error stack.
+
 ## 2.2.0
 - **Debug log**: a rolling activity log with a one-click **Copy report** (studio tab, paused banner and on-page panel). Failed steps record a page trace and the Check page report automatically.
 - Instagram posts, carousels and reels were already supported through `/p/` and `/reel/` links.

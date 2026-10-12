@@ -1,18 +1,19 @@
 globalThis.AuroraDOM={
  visible:e=>!!e?.getClientRects().length,
- controls(root){return [...root.querySelectorAll('button,[role="button"]')].filter(this.visible);},
+ controls(root){return root?[...root.querySelectorAll('button,[role="button"]')].filter(this.visible):[];},
  text(e){const copy=e.cloneNode(true);copy.querySelectorAll('svg').forEach(x=>x.remove());return copy.textContent.trim();},
  button(root,label){return this.controls(root).find(e=>this.text(e)===label||e.getAttribute('aria-label')===label);},
  scope(){return document.querySelector('article')||document.querySelector('main');},
  bar(root){
+  if(!root)return null;
   const comment=[...root.querySelectorAll('svg[aria-label="Comment"]')].find(this.visible);
   for(let e=comment?.parentElement;e&&e!==root;e=e.parentElement){if(e.querySelector('svg[aria-label="Like"],svg[aria-label="Unlike"]'))return e;}
   return null;
  },
- names(root){return [...new Set([...root.querySelectorAll('a[href]')].filter(this.visible).map(a=>AuroraSelectors.profileName(a.href)).filter(Boolean).map(x=>x.toLowerCase()))];},
- author(root){return [...root.querySelectorAll('a[href]')].filter(this.visible).map(a=>({name:AuroraSelectors.profileName(a.href),text:a.textContent?.trim()})).find(x=>x.name&&x.text&&(x.text===x.name||x.text.startsWith(x.name)))?.name?.toLowerCase();},
+ names(root){return !root?[]:[...new Set([...root.querySelectorAll('a[href]')].filter(this.visible).map(a=>AuroraSelectors.profileName(a.href)).filter(Boolean).map(x=>x.toLowerCase()))];},
+ author(root){return !root?undefined:[...root.querySelectorAll('a[href]')].filter(this.visible).map(a=>({name:AuroraSelectors.profileName(a.href),text:a.textContent?.trim()})).find(x=>x.name&&x.text&&(x.text===x.name||x.text.startsWith(x.name)))?.name?.toLowerCase();},
  commentRows(root){
-  const rows=[];
+  const rows=[];if(!root)return rows;
   for(const a of root.querySelectorAll('a[href*="/c/"]')){
    let e=a.parentElement;
    for(let n=0;e&&e!==root&&n<7;n++,e=e.parentElement){if(this.names(e).length&&this.controls(e).some(b=>b.textContent.trim()==='Reply')){rows.push(e);break;}}

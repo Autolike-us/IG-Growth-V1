@@ -13,6 +13,9 @@ MOCK='''window.data={job:{id:'test',status:'running'},receipts:{},history:[]};wi
 window.chrome={runtime:{id:'extension',onMessage:{addListener:f=>listeners.push(f)},sendMessage:async()=>({ok:true}),getURL:p=>'https://fixture.test/'+p},storage:{local:{get:async()=>structuredClone(data),set:async x=>Object.assign(data,structuredClone(x))},onChanged:{addListener:()=>{}}}};
 const nativeTimeout=window.setTimeout;window.setTimeout=(f,ms,...args)=>nativeTimeout(f,Math.min(ms,10),...args);
 document.addEventListener('click',e=>{if(e.target.closest('main button'))clicks++});'''
+COMMENT_POST='<main><article><a href="/alice/">alice</a><section><button id="like"><svg aria-label="Like"></svg></button><button><svg aria-label="Comment"></svg></button></section><ul id="rows"></ul><form id="f"><textarea aria-label="Add a comment…" placeholder="Add a comment…"></textarea><div role="button" id="post">Post</div></form></article></main>'
+# Simulates Instagram re-rendering: typing replaces the textarea node (value kept); Post adds our comment row and clears the box.
+RERENDER="""()=>{const f=document.getElementById('f');const mk=v=>{const t=document.createElement('textarea');t.setAttribute('aria-label','Add a comment…');t.placeholder='Add a comment…';t.value=v;t.addEventListener('input',()=>{const n=mk(t.value);t.replaceWith(n);});return t;};f.querySelector('textarea').replaceWith(mk(''));document.getElementById('post').onclick=()=>{const t=f.querySelector('textarea');const li=document.createElement('li');li.innerHTML='<a href="/me/">me</a><span>'+t.value+'</span><a href="/p/ABC123/c/1/">1m</a><button>Reply</button>';document.getElementById('rows').append(li);t.value='';};}"""
 with sync_playwright() as p:
  exe=os.environ.get('CHROMIUM_PATH') or next((x for x in ('/usr/bin/chromium','/opt/pw-browsers/chromium') if os.path.exists(x)),None)
  browser=p.chromium.launch(headless=True,args=['--no-sandbox'],**({'executable_path':exe} if exe else {}))
@@ -38,7 +41,9 @@ with sync_playwright() as p:
  fixture(PROFILE,'https://www.instagram.com/alice/');r=step(kind='posts',url='https://www.instagram.com/alice/',mode='users');check('profile with posts still returns its posts',not r.get('error') and len(r.get('posts',[]))==2)
  fixture(POST.replace('<span>Hello','<span>Too many attempts, Action Blocked, Try Again Later'));r=step();check('warning words inside a comment do not stop the task',bool(r.get('preview')) and not r.get('error'))
  fixture(POST.replace('<main>','<main><div role="dialog">Try Again Later</div>'));r=step();check('warning shown in a dialog does stop the task',bool(r.get('error')) and 'verification' in r.get('error',''))
+ fixture(COMMENT_POST);page.evaluate(RERENDER);r=step(action='comment',dry=False,comment='Nice!');check('comment is posted even when Instagram re-renders the comment box',bool(r.get('performed')) and not r.get('error'))
  fixture(POST);page.add_script_tag(path=str(ROOT/'content.js'));check('content script is safe to inject twice',page.evaluate('listeners.length')==1)
+ fixture(POST.replace('<a href="/alice/">alice','<a href="/me/">me'));r=step(dry=False);check('your own post is skipped, nothing is clicked',not r.get('performed') and 'own post' in r.get('message','') and page.evaluate('clicks')==0)
  fixture(POST);r=step();check('step results carry a short page trace',isinstance(r.get('trace'),list) and any('action bar' in t for t in r['trace']))
  fixture('<main></main>');r=step();check('a failed step carries the page check report',bool(r.get('error')) and 'Aurora page check' in r.get('diag','') and isinstance(r.get('trace'),list))
  fixture(POST);rep=page.evaluate('AuroraDiagnose()');check('page check reports what it found',('Post action bar found: ✓' in rep) and ('Like heart found: ✓' in rep) and 'Signed in: ✓' in rep)
