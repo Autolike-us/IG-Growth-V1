@@ -1,7 +1,18 @@
-﻿(()=>{
+(()=>{
+ if(globalThis.__auroraContent)return;globalThis.__auroraContent=true;
  const D=AuroraDOM,S=AuroraSelectors;let locked=false;
+ // Short trace of what this step saw; sent back with the result so the background can log it (never includes cookies or tokens).
+ let trace=[];const T=(...a)=>{trace.push(a.join(' ').slice(0,160));if(trace.length>40)trace.shift();};
  const wait=ms=>new Promise(r=>setTimeout(r,ms));
- function blocked(){const text=document.body.innerText;if(location.pathname.includes('/accounts/login')||document.querySelector('input[name="password"]'))throw Error('Sign in to Instagram, then resume.');if(/Try Again Later|We restrict certain activity|Action Blocked|Confirm it.s you|Help us confirm|challenge required/i.test(text))throw Error('Instagram requested verification or restricted this action. Task paused.');}
+ const WARN=/Try Again Later|We restrict certain activity|Action Blocked|Confirm it.s you|Help us confirm|challenge required/i;
+ let lastCheck=0;
+ // Looks only at dialogs, alerts, toasts and captcha widgets (never at comments or captions), at most every 1.5 s.
+ function blocked(force){
+  if(location.pathname.includes('/accounts/login')||document.querySelector('input[name="password"]'))throw Error('Sign in to Instagram, then resume.');
+  const now=Date.now();if(!force&&now-lastCheck<1500)return;lastCheck=now;
+  const zones=[...document.querySelectorAll('[role="dialog"],[role="alertdialog"],[role="alert"],[class*="captcha" i],[id*="captcha" i]')].filter(D.visible);
+  if(zones.some(z=>/captcha/i.test((z.id||'')+(z.className||''))||WARN.test(z.innerText||'')))throw Error('Instagram requested verification or restricted this action. Task paused.');
+ }
  async function active(id){blocked();const {job}=await chrome.storage.local.get('job');if(job?.id!==id||job.status!=='running')throw Error('Task stopped or paused.');}
  async function until(fn,id,ms=12000){for(let t=0;t<ms;t+=300){await active(id);const x=fn();if(x)return x;await wait(300);}return null;}
  async function collect(root,read,limit,id){
@@ -22,21 +33,23 @@
  async function perform(key,id,click,confirm,message){
   const {receipts={}}=await chrome.storage.local.get('receipts');
   if(receipts[key])return {message:`Skipped: this action was already ${receipts[key].status}. Check Instagram before creating another task.`};
-  await active(id);await receipt(key,'attempted');await active(id);await click();
-  const ok=await until(confirm,id,9000);
+  await active(id);await receipt(key,'attempted');await active(id);await click();T('click sent');
+  const ok=await until(confirm,id,9000);T('confirmed',!!ok);
   if(!ok)throw Error('Action was sent but could not be confirmed. It will not be automatically repeated. Check Instagram.');
   await receipt(key,'confirmed');return {performed:true,message};
  }
  async function step(s,c,id){
   await active(id);
   if(!await until(()=>D.scope(),id,15000))throw Error('Instagram did not render this page. Check access and resume.');
-  const root=D.scope();
+  const root=D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
   if(s.kind==='posts'){
    const read=()=>[...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(Boolean);
    const empty=()=>{if(!s.username)return null;const t=document.body.innerText||'';return /This account is private|This Account is Private/i.test(t)?'the account is private':/No posts yet|No Posts Yet/i.test(t)?'it has no posts':/Sorry, this page isn.t available|The link you followed may be broken|Page Not Found/i.test(t)?'the profile is unavailable':null;};
    const ready=await until(()=>read().length||empty(),id,15000);
    if(!ready)throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');
+   if(!read().length)T('empty profile:',ready);
    if(!read().length)return {posts:[],note:`Skipped @${s.username}: ${ready}.`};
+   T('post links',read().length);
    const posts=await collect(root,read,['hashtag','location'].includes(c.mode)?c.scanLimit:c.perUser,id);
    return {posts,note:'Collected available posts within your scan limit.'};
   }
@@ -52,7 +65,7 @@
    return {users:await collect(dialog,()=>D.names(dialog),c.scanLimit,id),note:'Collected available accounts within your scan limit.'};
   }
   if(s.kind==='author'){const author=await until(()=>D.author(root),id);if(!author)throw Error('Cannot identify this post author.');return {users:[author]};}
-  const actor=D.actor();
+  const actor=D.actor();T('signed in',!!actor);
   if(s.kind==='account'){
    const name=S.profileName(location.href)?.toLowerCase();if(name!==s.username)throw Error('Profile changed; refusing to act on a different account.');
    if(c.exclude.includes(name)||actor===name)return {message:'Skipped: own or excluded profile.'};
@@ -73,12 +86,12 @@
    return perform(`${actor}:unfollow:${name}:${id}`,id,async()=>{following.click();const confirm=await until(()=>[...document.querySelectorAll('[role="dialog"]')].map(d=>D.button(d,'Unfollow')).find(Boolean),id);if(!confirm)throw Error('Unfollow confirmation did not appear. Nothing else was clicked.');await active(id);confirm.click();},()=>D.button(header,'Follow')||D.button(header,'Follow back'),`Unfollowed @${name}.`);
   }
   if(s.kind!=='engage')throw Error('Unknown step. Create a new task.');
-  const author=await until(()=>D.author(root),id);
+  const author=await until(()=>D.author(root),id);T('author found',!!author);
   if(author&&c.exclude.includes(author))return {message:'Skipped: excluded post author.'};
   if(c.videos&&(root.querySelector('video')||location.pathname.includes('/reel/')))return {message:'Skipped: video filter.'};
   if(c.maxAge){const time=postDate(root);if(!time)throw Error('Cannot determine the post date with the age filter enabled.');if(Date.now()-Date.parse(time.dateTime)>c.maxAge*86400000)return {message:'Skipped: older than your age filter.'};}
   if(c.action==='like'){
-   const bar=await until(()=>D.bar(root),id);if(!bar)throw Error('Cannot identify post action bar. Comment likes were not clicked.');
+   const bar=await until(()=>D.bar(root),id);T('action bar',!!bar);if(!bar)throw Error('Cannot identify post action bar. Comment likes were not clicked.');
    if(bar.querySelector('svg[aria-label="Unlike"]'))return {message:'Skipped: post already liked.'};
    const button=bar.querySelector('svg[aria-label="Like"]')?.closest('button,[role="button"]');if(!button)throw Error('Post Like button unavailable.');
    if(c.dry)return {preview:true,message:'Preview: eligible post like. No change made.'};
@@ -103,5 +116,27 @@
   }
   throw Error('Unsupported post action.');
  }
- chrome.runtime.onMessage.addListener((m,s,reply)=>{if(m.action!=='step'||s.id!==chrome.runtime.id)return;if(locked){reply({wait:'Waiting for the current step.'});return;}locked=true;step(m.step,m.config,m.jobId).then(reply,e=>reply({error:e.message})).finally(()=>locked=false);return true;});
+ // Read-only report used by the on-page "Check page" button. Contains counts and yes/no only, no names or tokens.
+ globalThis.AuroraDiagnose=()=>{
+  const root=D.scope()||document.body,mark=ok=>ok?'✓':'✗';
+  const kind=S.postURL(location.href)?'post':/^\/explore\/tags\//.test(location.pathname)?'hashtag':S.profileName(location.href)?'profile':'other';
+  const lang=(document.documentElement.lang||'').toLowerCase(),bar=D.bar(root);
+  const rows=[
+   ['Page type',kind],
+   ['Signed in',mark(!!D.actor())],
+   ['English interface',mark(lang.startsWith('en'))+(lang?` (${lang})`:'')],
+   ['Page container found',mark(!!D.scope())],
+   ['Post action bar found',kind==='post'?mark(!!bar):'n/a'],
+   ['Like heart found',kind==='post'?mark(!!(bar&&bar.querySelector('svg[aria-label="Like"],svg[aria-label="Unlike"]'))):'n/a'],
+   ['Post author found',kind==='post'?mark(!!D.author(root)):'n/a'],
+   ['Profile header',kind==='profile'?mark(!!root.querySelector('header')):'n/a'],
+   ['Follow/Following button',kind==='profile'?mark(['Follow','Follow back','Following','Requested','Edit profile'].some(l=>D.button(root,l))):'n/a'],
+   ['Post links on page',String([...root.querySelectorAll('a[href]')].filter(a=>S.postURL(a.href)).length)],
+   ['Comment rows',String(D.commentRows(root).length)],
+   ['Followers/following popup',mark(!!D.listDialog('followers')||!!D.listDialog('following'))],
+   ['Warning visible',(()=>{try{blocked(true);return 'no';}catch(e){return /Sign in/.test(e.message)?'login page':'YES';}})()]
+  ];
+  return 'Aurora page check\n'+rows.map(([k,v])=>`${k}: ${v}`).join('\n');
+ };
+ chrome.runtime.onMessage.addListener((m,s,reply)=>{if(m.action!=='step'||s.id!==chrome.runtime.id)return;if(locked){reply({wait:'Waiting for the current step.'});return;}locked=true;trace=[];const diag=()=>{try{return globalThis.AuroraDiagnose();}catch{return '';}};step(m.step,m.config,m.jobId).then(r=>reply({...r,trace}),e=>reply({error:e.message,trace,diag:diag()})).finally(()=>locked=false);return true;});
 })();
