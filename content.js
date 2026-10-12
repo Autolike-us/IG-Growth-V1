@@ -11,7 +11,11 @@
   if(location.pathname.includes('/accounts/login')||document.querySelector('input[name="password"]'))throw Error('Sign in to Instagram, then resume.');
   const now=Date.now();if(!force&&now-lastCheck<1500)return;lastCheck=now;
   const zones=[...document.querySelectorAll('[role="dialog"],[role="alertdialog"],[role="alert"],[class*="captcha" i],[id*="captcha" i]')].filter(D.visible);
-  if(zones.some(z=>/captcha/i.test((z.id||'')+(z.className||''))||WARN.test(z.innerText||'')))throw Error('Instagram requested verification or restricted this action. Task paused.');
+  // A captcha counts only if it is actually on screen with a real size and content (pages keep empty captcha placeholders around).
+  const big=z=>{const r=z.getBoundingClientRect();return r.width>150&&r.height>100;};
+  const cls=z=>typeof z.className==='string'?z.className:'';
+  const hit=zones.find(z=>(/captcha/i.test((z.id||'')+cls(z))&&big(z)&&(z.innerText||z.querySelector('iframe,canvas,img')))||WARN.test(z.innerText||''));
+  if(hit){T('warning zone',hit.tagName.toLowerCase()+(hit.id?'#'+hit.id:'')+(cls(hit)?'.'+cls(hit).slice(0,60):'')+' "'+String(hit.innerText||'').replace(/\s+/g,' ').slice(0,80)+'"');throw Error('Instagram requested verification or restricted this action. Task paused.');}
  }
  async function active(id){blocked();const {job}=await chrome.storage.local.get('job');if(job?.id!==id||job.status!=='running')throw Error('Task stopped or paused.');}
  async function until(fn,id,ms=12000){for(let t=0;t<ms;t+=300){await active(id);const x=fn();if(x)return x;await wait(300);}return null;}

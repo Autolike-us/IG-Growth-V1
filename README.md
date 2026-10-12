@@ -1,4 +1,4 @@
-# Aurora 2.3.0
+# Aurora 2.3.1
 
 ## Update
 1. Stop the old Aurora task.
@@ -56,7 +56,7 @@ On any Instagram tab open the floating **✦ Aurora** panel and press **Check pa
 `npm run package` writes `dist/aurora-instagram-studio-<version>.zip` with only the files Chrome needs. Unzip it and use **Load unpacked**.
 
 ## Verification
-12 planning, 26 worker and 3 report tests (`npm test`) plus 30 isolated-Chromium browser checks (`npm run test:browser`; set `CHROMIUM_PATH` if Chromium is not found) run on GitHub for every push. Worker tests cover sender validation, redirects, limits/counts, completion, retries, daily cap and alerts. The browser checks simulate Instagram layouts; they do not prove compatibility with every live layout, so start with Preview and a limit of 1.
+12 planning, 26 worker and 3 report tests (`npm test`) plus 32 isolated-Chromium browser checks (`npm run test:browser`; set `CHROMIUM_PATH` if Chromium is not found) run on GitHub for every push. Worker tests cover sender validation, redirects, limits/counts, completion, retries, daily cap and alerts. The browser checks simulate Instagram layouts; they do not prove compatibility with every live layout, so start with Preview and a limit of 1.
 Live Instagram inspection verified hashtag redirects, location post links, likes/following dialogs and the unfollow menu. No live comments, follows or unfollows were submitted during development.
 This ZIP has not yet been tested end to end as an installed extension. Start with a one-target preview, then one live action you intend to perform.
 
