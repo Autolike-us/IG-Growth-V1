@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.5.2
+- The popup closes and the on-page panel folds away once a task starts running.
+
+## 2.5.1
+- Starting a task now reuses the Instagram tab you already have open instead of opening a new one.
+
+## 2.5.0
+- New: the form is remembered when the popup closes, a Reset to defaults button, and named saved setups (save, load, rename, delete).
+
 ## 2.4.1
 - Fix: comments now wait for the post page to finish loading before typing, restore text if Instagram resets the box while typing, and reuse leftover text from an interrupted attempt instead of stopping.
 

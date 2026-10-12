@@ -10,7 +10,7 @@ NAV='<a href="/me/"><img alt="me\'s profile picture"></a>'
 POST='<main><article><a href="/alice/">alice</a><section><button id="like"><svg aria-label="Like"></svg></button><button><svg aria-label="Comment"></svg></button></section><div><a href="/bob/">bob</a><span>Hello</span></div></article></main>'
 PROFILE='<main><header><h2>alice</h2><button>Follow</button></header><a href="/p/AAA/">p</a><a href="/p/BBB/">p</a></main>'
 MOCK='''window.data={job:{id:'test',status:'running'},receipts:{},history:[]};window.listeners=[];window.clicks=0;
-window.chrome={runtime:{id:'extension',onMessage:{addListener:f=>listeners.push(f)},sendMessage:async(m)=>{(window.sent=window.sent||[]).push(m);return {ok:true}},getURL:p=>'https://fixture.test/'+p},storage:{local:{get:async()=>structuredClone(data),set:async x=>Object.assign(data,structuredClone(x))},onChanged:{addListener:()=>{}}}};
+window.chrome={runtime:{id:'extension',onMessage:{addListener:f=>listeners.push(f)},sendMessage:async(m)=>{(window.sent=window.sent||[]).push(m);return {ok:true}},getURL:p=>'https://fixture.test/'+p},storage:{local:{get:async()=>structuredClone(data),set:async x=>Object.assign(data,structuredClone(x)),remove:async k=>{delete data[k]}},onChanged:{addListener:()=>{}}}};
 const nativeTimeout=window.setTimeout;window.setTimeout=(f,ms,...args)=>nativeTimeout(f,Math.min(ms,10),...args);
 document.addEventListener('click',e=>{if(e.target.closest('main button'))clicks++});'''
 COMMENT_POST='<main><article><a href="/alice/">alice</a><section><button id="like"><svg aria-label="Like"></svg></button><button><svg aria-label="Comment"></svg></button></section><ul id="rows"></ul><form id="f"><textarea aria-label="Add a comment…" placeholder="Add a comment…"></textarea><div role="button" id="post">Post</div></form></article></main>'
@@ -66,5 +66,14 @@ with sync_playwright() as p:
   page.evaluate("chrome.runtime.getManifest=()=>({name:'T',version:'1'})");page.click('#debugTab');page.wait_for_timeout(300)
   check(f+' debug log tab shows the report',page.locator('#debug').is_visible() and not page.locator('#studio').is_visible() and 'Aurora debug report' in page.locator('#debugText').inner_text())
   page.click('#studioTab');check(f+' can switch back to the studio',page.locator('#studio').is_visible())
+  page.evaluate("window.setTimeout=nativeTimeout");page.fill('#target','@zed');page.fill('#limit','7');page.wait_for_timeout(500)
+  check(f+' form is remembered as you type',page.evaluate("data.draft&&data.draft.target==='@zed'&&data.draft.limit==='7'"))
+  page.fill('#presetName','Morning');page.click('#presetSave');page.wait_for_timeout(100);check(f+' a named setup can be saved',page.evaluate("Object.keys(data.presets||{}).join()")=='Morning')
+  page.click('#presetSave');page.fill('#target','@other');page.fill('#presetName','Morning');page.click('#presetSave');page.wait_for_timeout(100);check(f+' overwriting a setup needs a second click',page.evaluate("data.presets.Morning.target")=='@zed')
+  page.click('#reset');page.click('#reset');page.wait_for_timeout(100);check(f+' reset restores defaults and keeps setups',page.locator('#target').input_value()=='' and page.locator('#limit').input_value()=='10' and page.locator('#dry').is_checked() and page.evaluate("!data.draft&&!!data.presets.Morning"))
+  page.select_option('#presetList','Morning');page.click('#presetLoad');page.wait_for_timeout(100);check(f+' loading a setup fills the form with preview on',page.locator('#target').input_value()=='@zed' and page.locator('#limit').input_value()=='7' and page.locator('#dry').is_checked())
+  page.fill('#presetName','Evening');page.click('#presetRename');page.wait_for_timeout(100);check(f+' a setup can be renamed',page.evaluate("Object.keys(data.presets).join()")=='Evening')
+  page.select_option('#presetList','Evening');page.click('#presetDelete');page.click('#presetDelete');page.wait_for_timeout(100);check(f+' a setup can be deleted',page.evaluate("Object.keys(data.presets).length")==0)
+  page.goto('https://fixture.test/'+f);page.set_content((ROOT/f).read_text(encoding='utf-8'));page.add_script_tag(content=MOCK.replace("history:[]};","history:[],draft:{target:'@back',limit:'4',comment:'Hi',action:'comment'}};"));page.add_script_tag(path=str(ROOT/'report.js'));page.add_script_tag(path=str(ROOT/'dashboard.js'));page.wait_for_timeout(150);check(f+' reopening restores the remembered form',page.locator('#target').input_value()=='@back' and page.locator('#limit').input_value()=='4' and page.locator('#comment').input_value()=='Hi')
  browser.close()
 print(json.dumps({'passed':len(checks),'checks':checks},indent=2))
