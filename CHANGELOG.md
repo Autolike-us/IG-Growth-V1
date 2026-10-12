@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.4.0
+- **Human-like typing.** Comments are typed one character at a time with an uneven rhythm and thinking pauses (capped at about 90 seconds) instead of being pasted in one go; line breaks become spaces; typing is checked before Post is pressed.
+- A human-length pause (about 1–2.5 s) before every action.
+- **Captcha handling.** A captcha, verification page or "try again later" dialog is reported clearly; for captchas Aurora brings the Instagram tab to the front, notifies you and continues by itself once it is solved. Identity checks and "try again later" warnings need a manual Resume.
+
 ## 2.3.1
 - **Fixed: false "verification requested" stops.** A captcha now counts only when it is actually on screen with a real size and content; empty captcha placeholders that the page keeps around no longer stop the task. When a warning does stop a task, the debug log names the element that triggered it.
 
