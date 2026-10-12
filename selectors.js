@@ -7,6 +7,7 @@ globalThis.AuroraSelectors = {
       if(tag)return 'tag:'+decodeURIComponent(tag[1]).toLowerCase();
       if(u.pathname==='/explore/search/keyword/'&&u.searchParams.get('q')?.startsWith('#'))return 'tag:'+u.searchParams.get('q').slice(1).toLowerCase();
       const place=u.pathname.match(/^\/explore\/locations\/(\d+)(?:\/|$)/);if(place)return 'location:'+place[1];
+      const prof=this.profileName(value);if(prof)return 'profile:'+prof.toLowerCase();
       return u.pathname.replace(/\/$/,'').toLowerCase()+u.search;
     }catch{return null;}
   },
