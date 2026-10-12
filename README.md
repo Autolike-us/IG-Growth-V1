@@ -11,6 +11,10 @@
 
 Preview resets ON when the studio opens or action changes. The floating panel offers a quick profile/like preview; full options are in the studio.
 
+## Alerts when a task stops
+
+When a task pauses (sign-in, verification, Instagram layout problem, restart) Aurora shows a desktop notification, turns the toolbar icon badge red (`!`), pops open the on-page panel with a pulsing red button, and shows a **Resume / Stop** banner in the studio and popup. A green `ON` badge means a task is running and `✓` means it finished. Starting a live task now asks for an inline two-step confirmation instead of a browser `confirm()` dialog.
+
 ## Actions
 - Like: the post itself, not its comments.
 - Follow: explicit/discovered accounts, or authors of discovered posts. Already-followed/requested accounts are skipped.
