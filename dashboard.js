@@ -2,7 +2,7 @@ const $=id=>document.getElementById(id); const fields=['action','comment','scanL
 const hints={users:'Separate usernames with commas or new lines.',followers:'One username. Loads available accounts from the follower dialog up to the discovery limit.',following:'One username. Loads available accounts from the following dialog up to the discovery limit.',commenters:'Paste an Instagram post URL. Discovers currently rendered commenters.',likers:'Paste an Instagram post URL. Discovers accounts from the visible likes dialog.',hashtag:'Enter one #hashtag, its /explore/tags/ URL, or Instagram hashtag search URL.',location:'Paste a specific place URL or numeric location ID. Country/city directories do not contain posts.',posts:'Paste post or reel URLs, separated by commas or new lines.'};
 function settings(){return Object.fromEntries(fields.map(k=>[k,$(k).type==='checkbox'?$(k).checked:$(k).value]));}
 function notice(s){$('notice').textContent=s;}
-async function send(action,data={}){try{const r=await chrome.runtime.sendMessage({action,...data});if(!r?.ok)throw Error(r?.error||'No response');notice(r.message||'Saved.');await render();}catch(e){notice(e.message);}}
+async function send(action,data={}){try{const r=await chrome.runtime.sendMessage({action,...data});if(!r?.ok)throw Error(r?.error||'No response');notice(r.message||'Saved.');await render();return true;}catch(e){notice(e.message);return false;}}
 function updateForm(){
  const action=$('action').value;
  for(const option of $('mode').options)option.disabled=action==='unfollow'&&option.value!=='users';
@@ -21,7 +21,9 @@ $('task').onsubmit=async e=>{e.preventDefault();const config=settings();
   notice('Live mode: this will really '+config.action+' (limit '+config.limit+', target: '+config.target+(config.action==='comment'?', comment: '+config.comment:'')+'). Click the button again within 15 seconds to confirm, or tick Preview only to cancel.');
   armed=setTimeout(()=>{disarm();notice('Live confirmation expired. Nothing was started.');},15000);return;
  }
- disarm();$('start').disabled=true;notice('Starting… opening your Instagram task tab.');await send('start',{config});await render();};$('save').onclick=()=>send('save',{config:settings()});
+ disarm();$('start').disabled=true;notice('Starting… opening your Instagram task tab.');const ok=await send('start',{config});await render();
+ // The task runs in the site tab, so the small popup is no longer needed: close it.
+ if(ok&&document.body.classList.contains('popup'))setTimeout(()=>window.close(),700);};$('save').onclick=()=>send('save',{config:settings()});
 for(const action of ['pause','resume','stop'])$(action).onclick=()=>send(action);$('bannerResume').onclick=()=>send('resume');$('bannerStop').onclick=()=>send('stop');
 $('theme').onclick=async()=>{document.body.classList.toggle('dark');await chrome.storage.local.set({dark:document.body.classList.contains('dark')});};
 function tab(name){for(const k of ['studio','history','debug']){$(k).hidden=k!==name;$(k+'Tab').classList.toggle('selected',k===name);}if(name==='debug')renderDebug();}

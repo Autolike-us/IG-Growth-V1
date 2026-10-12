@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.5.2
+- The popup closes and the on-page panel folds away once a task starts running.
+
 ## 2.5.1
 - Starting a task now reuses the Instagram tab you already have open instead of opening a new one.
 
