@@ -23,7 +23,9 @@
   const $ = id => shadow.getElementById(id);
   const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
   if (profile && !['explore','reels','direct','accounts'].includes(profile)) $('target').value=profile;
-  $('toggle').onclick=()=>{const section=shadow.querySelector('section');section.hidden=!section.hidden;$('toggle').setAttribute('aria-expanded',String(!section.hidden));};
+  const toggle=()=>{const section=shadow.querySelector('section');section.hidden=!section.hidden;$('toggle').setAttribute('aria-expanded',String(!section.hidden));};
+  $('toggle').onclick=toggle;
+  chrome.runtime.onMessage.addListener(m=>{if(m.action==='togglePanel')toggle();});
   async function send(action, extra={}) {
     try {const result=await chrome.runtime.sendMessage({action,...extra});if(!result?.ok)throw Error(result?.error||'No response from Aurora.');if(result.message)$('message').textContent=result.message;}
     catch(error){$('message').textContent=error.message+' If Aurora was updated, refresh this Instagram tab.';}
