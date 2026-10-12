@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.4.1
+- Fix: comments now wait for the post page to finish loading before typing, restore text if Instagram resets the box while typing, and reuse leftover text from an interrupted attempt instead of stopping.
+
 ## 2.4.0
 - **Human-like typing.** Comments are typed one character at a time with an uneven rhythm and thinking pauses (capped at about 90 seconds) instead of being pasted in one go; line breaks become spaces; typing is checked before Post is pressed.
 - A human-length pause (about 1–2.5 s) before every action.
