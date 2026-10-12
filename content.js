@@ -87,6 +87,7 @@
   }
   if(s.kind!=='engage')throw Error('Unknown step. Create a new task.');
   const author=await until(()=>D.author(root),id);T('author found',!!author);
+  if(actor&&author&&author===actor)return {message:'Skipped: this is your own post.'};
   if(author&&c.exclude.includes(author))return {message:'Skipped: excluded post author.'};
   if(c.videos&&(root.querySelector('video')||location.pathname.includes('/reel/')))return {message:'Skipped: video filter.'};
   if(c.maxAge){const time=postDate(root);if(!time)throw Error('Cannot determine the post date with the age filter enabled.');if(Date.now()-Date.parse(time.dateTime)>c.maxAge*86400000)return {message:'Skipped: older than your age filter.'};}

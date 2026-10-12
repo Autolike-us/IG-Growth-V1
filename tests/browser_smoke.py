@@ -43,6 +43,7 @@ with sync_playwright() as p:
  fixture(POST.replace('<main>','<main><div role="dialog">Try Again Later</div>'));r=step();check('warning shown in a dialog does stop the task',bool(r.get('error')) and 'verification' in r.get('error',''))
  fixture(COMMENT_POST);page.evaluate(RERENDER);r=step(action='comment',dry=False,comment='Nice!');check('comment is posted even when Instagram re-renders the comment box',bool(r.get('performed')) and not r.get('error'))
  fixture(POST);page.add_script_tag(path=str(ROOT/'content.js'));check('content script is safe to inject twice',page.evaluate('listeners.length')==1)
+ fixture(POST.replace('<a href="/alice/">alice','<a href="/me/">me'));r=step(dry=False);check('your own post is skipped, nothing is clicked',not r.get('performed') and 'own post' in r.get('message','') and page.evaluate('clicks')==0)
  fixture(POST);r=step();check('step results carry a short page trace',isinstance(r.get('trace'),list) and any('action bar' in t for t in r['trace']))
  fixture('<main></main>');r=step();check('a failed step carries the page check report',bool(r.get('error')) and 'Aurora page check' in r.get('diag','') and isinstance(r.get('trace'),list))
  fixture(POST);rep=page.evaluate('AuroraDiagnose()');check('page check reports what it found',('Post action bar found: ✓' in rep) and ('Like heart found: ✓' in rep) and 'Signed in: ✓' in rep)

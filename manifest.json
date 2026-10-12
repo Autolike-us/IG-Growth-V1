@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Aurora \u2022 Instagram Studio",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Personal Instagram discovery, likes, follows, unfollows and comments with preview and local history.",
   "permissions": [
     "storage",
