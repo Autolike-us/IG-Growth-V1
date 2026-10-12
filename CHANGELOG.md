@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.5.1
+- Starting a task now reuses the Instagram tab you already have open instead of opening a new one.
+
 ## 2.5.0
 - New: the form is remembered when the popup closes, a Reset to defaults button, and named saved setups (save, load, rename, delete).
 
