@@ -1,4 +1,4 @@
-# Aurora 2.2.2
+# Aurora 2.3.0
 
 ## Update
 1. Stop the old Aurora task.
@@ -34,7 +34,8 @@ One action per task. Post age/video filters apply to post likes/comments. Posts 
 
 ## Pacing, caps and limits
 
-- The wait between steps is **never shorter than the seconds you set**; Aurora adds a random 0–40% on top so the rhythm is not mechanical.
+- The **first action starts quickly**: reading a profile, or skipping a post where nothing was sent, is followed by only a short natural pause (4–9 seconds).
+- After every **action** (like, follow, unfollow, comment; or a preview of one) the wait is **never shorter than the seconds you set**; Aurora adds a random 0–40% on top so the rhythm is not mechanical.
 - **Daily action cap** (optional, 0 = off): live actions are counted per day across tasks, and the task pauses when the cap is reached.
 - Private, empty or unavailable profiles are skipped automatically; load-type errors (page still rendering) are retried up to 3 times before pausing. Nothing that could have sent a click is ever retried.
 - History keeps the most recent 5,000 entries (use **Clear history**). Old like/follow receipts are dropped after 90 days; comment receipts are kept so a comment is never sent twice.
@@ -55,7 +56,7 @@ On any Instagram tab open the floating **✦ Aurora** panel and press **Check pa
 `npm run package` writes `dist/aurora-instagram-studio-<version>.zip` with only the files Chrome needs. Unzip it and use **Load unpacked**.
 
 ## Verification
-12 planning, 23 worker and 3 report tests (`npm test`) plus 30 isolated-Chromium browser checks (`npm run test:browser`; set `CHROMIUM_PATH` if Chromium is not found) run on GitHub for every push. Worker tests cover sender validation, redirects, limits/counts, completion, retries, daily cap and alerts. The browser checks simulate Instagram layouts; they do not prove compatibility with every live layout, so start with Preview and a limit of 1.
+12 planning, 26 worker and 3 report tests (`npm test`) plus 30 isolated-Chromium browser checks (`npm run test:browser`; set `CHROMIUM_PATH` if Chromium is not found) run on GitHub for every push. Worker tests cover sender validation, redirects, limits/counts, completion, retries, daily cap and alerts. The browser checks simulate Instagram layouts; they do not prove compatibility with every live layout, so start with Preview and a limit of 1.
 Live Instagram inspection verified hashtag redirects, location post links, likes/following dialogs and the unfollow menu. No live comments, follows or unfollows were submitted during development.
 This ZIP has not yet been tested end to end as an installed extension. Start with a one-target preview, then one live action you intend to perform.
 

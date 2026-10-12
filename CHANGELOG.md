@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.3.0
+- **Faster start.** The pacing wait now applies after each action, not after reading a profile or skipping a post, so the first action begins about 10 seconds after you press Start instead of waiting a full delay first. The wait between actions is unchanged (never shorter than your setting, plus the random extra).
+
 ## 2.2.2
 - **Your own posts are never liked or commented on**; they are skipped with a message (parity with the TikTok build).
 
