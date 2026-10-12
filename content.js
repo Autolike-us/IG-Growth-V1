@@ -1,6 +1,8 @@
 (()=>{
  if(globalThis.__auroraContent)return;globalThis.__auroraContent=true;
  const D=AuroraDOM,S=AuroraSelectors;let locked=false;
+ // Short trace of what this step saw; sent back with the result so the background can log it (never includes cookies or tokens).
+ let trace=[];const T=(...a)=>{trace.push(a.join(' ').slice(0,160));if(trace.length>40)trace.shift();};
  const wait=ms=>new Promise(r=>setTimeout(r,ms));
  const WARN=/Try Again Later|We restrict certain activity|Action Blocked|Confirm it.s you|Help us confirm|challenge required/i;
  let lastCheck=0;
@@ -31,21 +33,23 @@
  async function perform(key,id,click,confirm,message){
   const {receipts={}}=await chrome.storage.local.get('receipts');
   if(receipts[key])return {message:`Skipped: this action was already ${receipts[key].status}. Check Instagram before creating another task.`};
-  await active(id);await receipt(key,'attempted');await active(id);await click();
-  const ok=await until(confirm,id,9000);
+  await active(id);await receipt(key,'attempted');await active(id);await click();T('click sent');
+  const ok=await until(confirm,id,9000);T('confirmed',!!ok);
   if(!ok)throw Error('Action was sent but could not be confirmed. It will not be automatically repeated. Check Instagram.');
   await receipt(key,'confirmed');return {performed:true,message};
  }
  async function step(s,c,id){
   await active(id);
   if(!await until(()=>D.scope(),id,15000))throw Error('Instagram did not render this page. Check access and resume.');
-  const root=D.scope();
+  const root=D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
   if(s.kind==='posts'){
    const read=()=>[...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(Boolean);
    const empty=()=>{if(!s.username)return null;const t=document.body.innerText||'';return /This account is private|This Account is Private/i.test(t)?'the account is private':/No posts yet|No Posts Yet/i.test(t)?'it has no posts':/Sorry, this page isn.t available|The link you followed may be broken|Page Not Found/i.test(t)?'the profile is unavailable':null;};
    const ready=await until(()=>read().length||empty(),id,15000);
    if(!ready)throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');
+   if(!read().length)T('empty profile:',ready);
    if(!read().length)return {posts:[],note:`Skipped @${s.username}: ${ready}.`};
+   T('post links',read().length);
    const posts=await collect(root,read,['hashtag','location'].includes(c.mode)?c.scanLimit:c.perUser,id);
    return {posts,note:'Collected available posts within your scan limit.'};
   }
@@ -61,7 +65,7 @@
    return {users:await collect(dialog,()=>D.names(dialog),c.scanLimit,id),note:'Collected available accounts within your scan limit.'};
   }
   if(s.kind==='author'){const author=await until(()=>D.author(root),id);if(!author)throw Error('Cannot identify this post author.');return {users:[author]};}
-  const actor=D.actor();
+  const actor=D.actor();T('signed in',!!actor);
   if(s.kind==='account'){
    const name=S.profileName(location.href)?.toLowerCase();if(name!==s.username)throw Error('Profile changed; refusing to act on a different account.');
    if(c.exclude.includes(name)||actor===name)return {message:'Skipped: own or excluded profile.'};
@@ -82,12 +86,12 @@
    return perform(`${actor}:unfollow:${name}:${id}`,id,async()=>{following.click();const confirm=await until(()=>[...document.querySelectorAll('[role="dialog"]')].map(d=>D.button(d,'Unfollow')).find(Boolean),id);if(!confirm)throw Error('Unfollow confirmation did not appear. Nothing else was clicked.');await active(id);confirm.click();},()=>D.button(header,'Follow')||D.button(header,'Follow back'),`Unfollowed @${name}.`);
   }
   if(s.kind!=='engage')throw Error('Unknown step. Create a new task.');
-  const author=await until(()=>D.author(root),id);
+  const author=await until(()=>D.author(root),id);T('author found',!!author);
   if(author&&c.exclude.includes(author))return {message:'Skipped: excluded post author.'};
   if(c.videos&&(root.querySelector('video')||location.pathname.includes('/reel/')))return {message:'Skipped: video filter.'};
   if(c.maxAge){const time=postDate(root);if(!time)throw Error('Cannot determine the post date with the age filter enabled.');if(Date.now()-Date.parse(time.dateTime)>c.maxAge*86400000)return {message:'Skipped: older than your age filter.'};}
   if(c.action==='like'){
-   const bar=await until(()=>D.bar(root),id);if(!bar)throw Error('Cannot identify post action bar. Comment likes were not clicked.');
+   const bar=await until(()=>D.bar(root),id);T('action bar',!!bar);if(!bar)throw Error('Cannot identify post action bar. Comment likes were not clicked.');
    if(bar.querySelector('svg[aria-label="Unlike"]'))return {message:'Skipped: post already liked.'};
    const button=bar.querySelector('svg[aria-label="Like"]')?.closest('button,[role="button"]');if(!button)throw Error('Post Like button unavailable.');
    if(c.dry)return {preview:true,message:'Preview: eligible post like. No change made.'};
@@ -134,5 +138,5 @@
   ];
   return 'Aurora page check\n'+rows.map(([k,v])=>`${k}: ${v}`).join('\n');
  };
- chrome.runtime.onMessage.addListener((m,s,reply)=>{if(m.action!=='step'||s.id!==chrome.runtime.id)return;if(locked){reply({wait:'Waiting for the current step.'});return;}locked=true;step(m.step,m.config,m.jobId).then(reply,e=>reply({error:e.message})).finally(()=>locked=false);return true;});
+ chrome.runtime.onMessage.addListener((m,s,reply)=>{if(m.action!=='step'||s.id!==chrome.runtime.id)return;if(locked){reply({wait:'Waiting for the current step.'});return;}locked=true;trace=[];const diag=()=>{try{return globalThis.AuroraDiagnose();}catch{return '';}};step(m.step,m.config,m.jobId).then(r=>reply({...r,trace}),e=>reply({error:e.message,trace,diag:diag()})).finally(()=>locked=false);return true;});
 })();

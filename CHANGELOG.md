@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.2.0
+- **Debug log**: a rolling activity log with a one-click **Copy report** (studio tab, paused banner and on-page panel). Failed steps record a page trace and the Check page report automatically.
+- Instagram posts, carousels and reels were already supported through `/p/` and `/reel/` links.
+
 ## 2.1.0
 - Parity with the TikTok build: finish immediately at the action limit; wait never shorter than the setting plus 0–40% random extra; optional daily action cap.
 - Interrupted live actions are detected and never re-sent; page-load errors retry up to 3 times (nothing that could have clicked is retried).

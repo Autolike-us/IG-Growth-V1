@@ -39,10 +39,17 @@ with sync_playwright() as p:
  fixture(POST.replace('<span>Hello','<span>Too many attempts, Action Blocked, Try Again Later'));r=step();check('warning words inside a comment do not stop the task',bool(r.get('preview')) and not r.get('error'))
  fixture(POST.replace('<main>','<main><div role="dialog">Try Again Later</div>'));r=step();check('warning shown in a dialog does stop the task',bool(r.get('error')) and 'verification' in r.get('error',''))
  fixture(POST);page.add_script_tag(path=str(ROOT/'content.js'));check('content script is safe to inject twice',page.evaluate('listeners.length')==1)
+ fixture(POST);r=step();check('step results carry a short page trace',isinstance(r.get('trace'),list) and any('action bar' in t for t in r['trace']))
+ fixture('<main></main>');r=step();check('a failed step carries the page check report',bool(r.get('error')) and 'Aurora page check' in r.get('diag','') and isinstance(r.get('trace'),list))
  fixture(POST);rep=page.evaluate('AuroraDiagnose()');check('page check reports what it found',('Post action bar found: ✓' in rep) and ('Like heart found: ✓' in rep) and 'Signed in: ✓' in rep)
  fixture(POST,actor=False);rep=page.evaluate('AuroraDiagnose()');check('page check flags a missing sign-in','Signed in: ✗' in rep)
  fixture(PROFILE,'https://www.instagram.com/alice/?hl=en');r=step(action='follow',kind='account',url='https://www.instagram.com/alice/',mode='users');check('profile with a tracking parameter is still recognised',not r.get('error'))
  for f in ('dashboard.html','popup.html'):
-  html=(ROOT/f).read_text(encoding='utf-8');check(f+' preview defaults on','id="dry" checked' in html);check(f+' has the daily cap and banner','id="dailyCap"' in html and 'id="banner"' in html)
+  html=(ROOT/f).read_text(encoding='utf-8');check(f+' preview defaults on','id="dry" checked' in html);check(f+' has the daily cap and banner','id="dailyCap"' in html and 'id="banner"' in html);check(f+' has the debug log tab','id="debugTab"' in html and 'id="debugText"' in html and 'report.js' in html)
+ for f in ('dashboard.html','popup.html'):
+  page.goto('https://fixture.test/'+f);page.set_content((ROOT/f).read_text(encoding='utf-8'));page.add_script_tag(content=MOCK);page.evaluate('data.job=null');page.add_style_tag(path=str(ROOT/'style.css'));page.add_script_tag(path=str(ROOT/'report.js'));page.add_script_tag(path=str(ROOT/'dashboard.js'));page.wait_for_timeout(400)
+  page.evaluate("chrome.runtime.getManifest=()=>({name:'T',version:'1'})");page.click('#debugTab');page.wait_for_timeout(300)
+  check(f+' debug log tab shows the report',page.locator('#debug').is_visible() and not page.locator('#studio').is_visible() and 'Aurora debug report' in page.locator('#debugText').inner_text())
+  page.click('#studioTab');check(f+' can switch back to the studio',page.locator('#studio').is_visible())
  browser.close()
 print(json.dumps({'passed':len(checks),'checks':checks},indent=2))
