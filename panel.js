@@ -71,7 +71,7 @@ const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
   function tickNow(){
     const job=lastJob,el=$('now');if(!job){el.hidden=true;return;}
     const left=job.queue?.length||0,part='\u00b7 '+doneNow(job)+'/'+(job.config?.limit||'?')+' done'+(left?' \u00b7 '+left+' step'+(left===1?'':'s')+' left':'');
-    if(job.status==='running'){const s=Math.max(0,Math.round(((job.nextAt||0)-Date.now())/1000));el.textContent='\u25b6 '+(s?'Next step in '+s+'s ':'Working\u2026 ')+part;el.hidden=false;}
+    if(job.status==='running'){const w=walkOf(job),s=Math.max(0,Math.round((Math.max(job.nextAt||0,w?.until||0)-Date.now())/1000));el.textContent='\u25b6 '+(s?(w?.until>Date.now()?'Next post in ':'Next step in ')+s+'s ':'Working\u2026 ')+part;el.hidden=false;}
     else if(job.status==='paused'){el.textContent='\u23f8 Paused '+part;el.hidden=false;}
     else el.hidden=true;
   }

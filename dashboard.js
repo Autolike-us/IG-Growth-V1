@@ -64,7 +64,7 @@ $('debugClear').onclick=async()=>{const b=$('debugClear');if(b.dataset.sure!=='1
 function tickNow(){
  const job=lastJob,el=$('nowline');if(!job||!['running','paused'].includes(job.status)){el.textContent='';return;}
  const left=job.queue?.length||0,part=doneNow(job)+'/'+(job.config?.limit||'?')+' done'+(left?' · '+left+' step'+(left===1?'':'s')+' left':'');
- if(job.status==='running'){const s=Math.max(0,Math.round(((job.nextAt||0)-Date.now())/1000));el.textContent='▶ '+(s?'Next step in '+s+'s · ':'Working… · ')+part;}else el.textContent='⏸ Paused · '+part;
+ if(job.status==='running'){const w=walkOf(job),s=Math.max(0,Math.round((Math.max(job.nextAt||0,w?.until||0)-Date.now())/1000));el.textContent='▶ '+(s?(w?.until>Date.now()?'Next post in ':'Next step in ')+s+'s · ':'Working… · ')+part;}else el.textContent='⏸ Paused · '+part;
 }
 let lastJob=null;setInterval(tickNow,1000);
 let wasActive=false;

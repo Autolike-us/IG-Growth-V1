@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.7.2
+- The countdown is back during a profile walk: after each like the panel and studio show "Next post in Ns" counting down to the next post.
+
 ## 2.7.1
 - While a profile walk is running, the panel and studio now show live progress (current post, likes done so far, the waiting pause) and count each like as it happens, instead of staying at 0/N until the whole profile finishes.
 
