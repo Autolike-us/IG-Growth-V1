@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.8.0
+- The panel and the Live session card show the same progress line on every site: "Target 2 of 5 · @name · post 2/3 · next post in 24s · 1/9 done", a finished/current/upcoming target list, and a "Skip this target & continue" button when paused.
+- The studio, popup and on-page panel now open in the light theme by default (the theme switch still remembers your choice).
+
 ## 2.7.2
 - The countdown is back during a profile walk: after each like the panel and studio show "Next post in Ns" counting down to the next post.
 
