@@ -12,5 +12,5 @@ test('delay below 30 seconds is rejected',()=>assert.throws(()=>config({delay:5}
 test('daily cap is optional and validated',()=>{assert.equal(config().dailyCap,0);assert.equal(config({dailyCap:150}).dailyCap,150);assert.throws(()=>config({dailyCap:-1}));assert.throws(()=>config({dailyCap:10001}));});
 test('unfollow only works from an explicit list',()=>assert.throws(()=>config({action:'unfollow',mode:'hashtag',target:'#x'})));
 test('comment needs text up to 2200 characters',()=>{assert.throws(()=>config({action:'comment',comment:''}));assert.throws(()=>config({action:'comment',comment:'x'.repeat(2201)}));assert.equal(config({action:'comment',comment:'Nice!'}).comment,'Nice!');});
-test('like on a profile list plans a posts step per profile',()=>{const steps=E.initial(config({target:'alice, bob'}));assert.equal(steps.length,2);assert.equal(steps[0].kind,'posts');assert.equal(steps[0].username,'alice');});
+test('like on a profile list plans an in-place walk step per profile',()=>{const steps=E.initial(config({target:'alice, bob'}));assert.equal(steps.length,2);assert.equal(steps[0].kind,'walk');assert.equal(steps[0].username,'alice');});
 test('follow on a profile list plans account steps',()=>assert.equal(E.initial(config({action:'follow',target:'alice'}))[0].kind,'account'));

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.7.0
+- Like (and comment) now work the way you would by hand: Aurora opens the first post of a profile in its popup, acts, presses the popup's Next arrow and repeats until the posts-per-profile / task limit, then closes the popup. No more loading each post by URL, so Instagram redirects can no longer stop the task. Already-liked posts are skipped, the last post ends the walk, photo-carousel arrows are ignored, and previews walk without clicking.
+- Hashtag/location sources and direct post links still open posts by URL.
+
 ## 2.6.2
 - The Live session card and the on-page Aurora panel show a running counter again: actions done / limit, steps left and a countdown to the next step.
 
