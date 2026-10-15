@@ -22,8 +22,9 @@ globalThis.AuroraSelectors = {
     try {
       const u = new URL(value);
       if (u.origin !== 'https://www.instagram.com') return null;
-      const match = u.pathname.match(/^\/(?:[\w.]+\/)?(p|reel)\/([\w-]+)\/?$/);
-      return match ? `https://www.instagram.com/${match[1]}/${match[2]}/` : null;
+      const match = u.pathname.match(/^\/(?:[\w.]+\/)?(p|reels?)\/([\w-]+)\/?$/);
+      // /reels/<id>/ is the same reel as /reel/<id>/ (Instagram may redirect between them); always canonicalise to /p/ or /reel/.
+      return match ? `https://www.instagram.com/${match[1]==='p'?'p':'reel'}/${match[2]}/` : null;
     } catch { return null; }
   },
   listControl(root, source) {

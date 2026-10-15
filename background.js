@@ -47,8 +47,9 @@ async function bumpDaily(){await chrome.storage.local.set({daily:{day:today(),co
 
 // Bring the task tab to the front so a captcha can be solved right away.
 async function focusTab(job){try{await chrome.tabs.update(job.tabId,{active:true});const t=await chrome.tabs.get(job.tabId);await chrome.windows.update(t.windowId,{focused:true,drawAttention:true});}catch{}}
+async function draftToPreview(){try{const {draft}=await chrome.storage.local.get('draft');if(draft&&draft.dry===false)await chrome.storage.local.set({draft:{...draft,dry:true}});}catch{}}
 async function finish(job){
- job.status='completed';job.message=`Session complete: ${job.done||0} ${job.config.dry?'previewed':'actions confirmed'}, ${job.skipped||0} skipped.`;
+ job.status='completed';if(!job.config.dry)await draftToPreview();job.message=`Session complete: ${job.done||0} ${job.config.dry?'previewed':'actions confirmed'}, ${job.skipped||0} skipped.`;
  await save(job);await log(job.message);await dlog('info','Task finished: '+job.message);await chrome.alarms.clear('step');await notify('Aurora finished ✓',job.message);
 }
 // Send a step to the task tab; if the content script is missing (extension reloaded, tab opened earlier), attach it once and retry.
@@ -74,22 +75,22 @@ async function tick(){
    if(job.navigation?.target===step.url&&job.navigation.attempts>=2)throw Error('Instagram redirected away from this target. Check the task tab and resume; Aurora stopped retrying the URL.');
    job.navigation={target:step.url,attempts:job.navigation?.target===step.url?job.navigation.attempts+1:1};job.message='Opening '+step.url;job.nextAt=Date.now()+2000;await save(job);await dlog('info','Opening '+short(step.url)+(job.navigation.attempts>1?` (attempt ${job.navigation.attempts})`:''));await chrome.tabs.update(job.tabId,{url:step.url,active:true});await schedule(job);return;
   }
-  const action=['account','engage'].includes(step.kind)&&!job.config.dry;
-  if(action&&job.config.dailyCap&&await dailyCount()>=job.config.dailyCap)throw Error(`Daily cap reached (${job.config.dailyCap} actions today). Resume tomorrow or raise the cap in the studio.`);
+  const action=['account','engage','walk'].includes(step.kind)&&!job.config.dry;let room=null;
+  if(action&&job.config.dailyCap){const used=await dailyCount();if(used>=job.config.dailyCap)throw Error(`Daily cap reached (${job.config.dailyCap} actions today). Resume tomorrow or raise the cap in the studio.`);room=job.config.dailyCap-used;}
   job.navigation=null;job.message='Reading Instagram: '+step.kind;await save(job);
   if(action){job.inFlight=true;await save(job);}
   await dlog('info',`Step ${step.kind} ${short(step.url)}${job.config.dry?' [preview]':''}`);
-  const r=await sendStep(job,step);
+  const r=await sendStep(job,step.kind==='walk'?{...step,done:job.done||0,room}:step);
   const latest=(await chrome.storage.local.get('job')).job;if(latest?.id!==job.id||latest.status!=='running')return;
   job.inFlight=false;await save(job);
   if(r?.error&&RETRYABLE.test(r.error)&&(job.retries||0)<3){job.retries=(job.retries||0)+1;job.message=`Instagram was still loading (${r.error}) Retrying ${job.retries}/3…`;job.nextAt=Date.now()+8000;await save(job);await dlog('warn',`Retry ${job.retries}/3 after: ${r.error}`,ctx(r));await schedule(job);return;}
   if(r?.error){await dlog('error','Step failed: '+r.error,ctx(r));throw Error(r.error);}if(!r)throw Error('Instagram returned no result.');
   job.retries=0;
   if(r.wait){job.message=r.wait;job.nextAt=Date.now()+3000;await save(job);await schedule(job);return;}
-  job.queue.shift();const more=AuroraEngine.expand(job,step,r);job.queue.unshift(...more);
+  try{await chrome.storage.local.remove('walk');}catch{}job.queue.shift();const more=AuroraEngine.expand(job,step,r);job.queue.unshift(...more);
   let gap=quick();
   if(['users','posts','author'].includes(step.kind))job.message=`Discovered ${more.length} ${step.kind==='posts'?'posts':'profiles'}. ${r.note||''}`;
-  else{if(r.performed||r.preview){gap=pause(job);job.done=(job.done||0)+1;if(r.performed){job.counts[job.config.action]++;await bumpDaily();}else job.previewed++;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}
+  else{if(r.performed||r.preview){const n=step.kind==='walk'?Math.max(1,r.count||1):1;gap=pause(job);job.done=(job.done||0)+n;if(r.performed){job.counts[job.config.action]+=n;for(let i=0;i<n;i++)await bumpDaily();}else job.previewed+=n;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}
   await log(job.message,step.url);await dlog('info','→ '+job.message,/^Skipped/.test(job.message||'')?ctx(r):undefined);
   if(!job.queue.length||(job.done||0)>=job.config.limit){await finish(job);return;}
   job.nextAt=Date.now()+gap;await save(job);await schedule(job);
@@ -130,7 +131,7 @@ chrome.runtime.onMessage.addListener((m,s,respond)=>{
   if(m.action==='resume')return resumeTask();
   const {job}=await chrome.storage.local.get('job');if(!job)throw Error('Create a task first.');
   if(m.action!=='pause'&&m.action!=='stop')throw Error('Unknown action.');
-  job.status=m.action==='pause'?'paused':'stopped';job.message=job.status+'. A click already sent may finish.';await chrome.alarms.clear('step');
+  job.status=m.action==='pause'?'paused':'stopped';if(m.action==='stop'&&!job.config.dry)await draftToPreview();job.message=job.status+'. A click already sent may finish.';await chrome.alarms.clear('step');
   await save(job);await dlog('info','You pressed '+m.action);return{ok:true,message:job.message};
  })().then(respond,e=>respond({ok:false,error:e.message}));return true;
 });

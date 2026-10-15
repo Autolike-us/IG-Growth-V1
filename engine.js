@@ -16,7 +16,8 @@ globalThis.AuroraEngine = {
     if(c.action==='comment'&&(!c.comment||c.comment.length>2200))throw Error('Enter your comment text (1–2200 characters).');
     if(c.action==='unfollow'&&c.mode!=='users')throw Error('Unfollow uses your explicit profile/user list.');return c;
   },
-  profileStep(name,c){return {kind:['follow','unfollow'].includes(c.action)?'account':'posts',url:`https://www.instagram.com/${name}/`,username:name};},
+  // Like/comment walk a profile in place: open its first post, act, press Next, repeat (no per-post page loads).
+  profileStep(name,c){return {kind:['follow','unfollow'].includes(c.action)?'account':'walk',url:`https://www.instagram.com/${name}/`,username:name};},
   initial(c) {
     const value=String(c.target||'').trim();if(!value)throw Error('Enter a target.');
     const post=s=>{const url=AuroraSelectors.postURL(s);if(!url)throw Error('Enter valid Instagram post or reel URLs.');return url;};

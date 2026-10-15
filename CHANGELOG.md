@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.7.1
+- While a profile walk is running, the panel and studio now show live progress (current post, likes done so far, the waiting pause) and count each like as it happens, instead of staying at 0/N until the whole profile finishes.
+
+## 2.7.0
+- Like (and comment) now work the way you would by hand: Aurora opens the first post of a profile in its popup, acts, presses the popup's Next arrow and repeats until the posts-per-profile / task limit, then closes the popup. No more loading each post by URL, so Instagram redirects can no longer stop the task. Already-liked posts are skipped, the last post ends the walk, photo-carousel arrows are ignored, and previews walk without clicking.
+- Hashtag/location sources and direct post links still open posts by URL.
+
+## 2.6.2
+- The Live session card and the on-page Aurora panel show a running counter again: actions done / limit, steps left and a countdown to the next step.
+
+## 2.6.1
+- Reels: `/reels/<id>/` links count as the same reel as `/reel/<id>/`, so an Instagram redirect between them no longer pauses the task; reel pages and post popups without an article/main wrapper are now found.
+
+## 2.6.0
+- Studio refresh (interface only; automation unchanged): always-visible PREVIEW/LIVE bar (LIVE tucks away after 2 s), the Live choice stays on until the task finishes or is stopped, fields the chosen action does not use are hidden, collapsible Pace & limits and Advanced sections, a one-line summary above Start, sidebar badges, activity filters and search, Saved setups under the Live session card, a real factory reset, a first-run checklist, Ctrl+Enter to start, a single scrollbar and no pinned bars in the popup, and a redesigned on-page Aurora panel.
+
 ## 2.5.2
 - The popup closes and the on-page panel folds away once a task starts running.
 
