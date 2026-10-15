@@ -3,7 +3,8 @@ globalThis.AuroraDOM={
  controls(root){return root?[...root.querySelectorAll('button,[role="button"]')].filter(this.visible):[];},
  text(e){const copy=e.cloneNode(true);copy.querySelectorAll('svg').forEach(x=>x.remove());return copy.textContent.trim();},
  button(root,label){return this.controls(root).find(e=>this.text(e)===label||e.getAttribute('aria-label')===label);},
- scope(){return document.querySelector('article')||document.querySelector('main');},
+ // Reel pages and post popups often have no <article> or <main>; fall back to a dialog or the page body when a post action bar is on screen.
+ scope(){return document.querySelector('article')||document.querySelector('main')||[...document.querySelectorAll('[role="dialog"]')].find(d=>this.visible(d)&&d.querySelector('svg[aria-label="Comment"]'))||(document.querySelector('svg[aria-label="Comment"]')?document.body:null);},
  bar(root){
   if(!root)return null;
   const comment=[...root.querySelectorAll('svg[aria-label="Comment"]')].find(this.visible);

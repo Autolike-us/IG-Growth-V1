@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.6.1
+- Reels: `/reels/<id>/` links count as the same reel as `/reel/<id>/`, so an Instagram redirect between them no longer pauses the task; reel pages and post popups without an article/main wrapper are now found.
+
 ## 2.6.0
 - Studio refresh (interface only; automation unchanged): always-visible PREVIEW/LIVE bar (LIVE tucks away after 2 s), the Live choice stays on until the task finishes or is stopped, fields the chosen action does not use are hidden, collapsible Pace & limits and Advanced sections, a one-line summary above Start, sidebar badges, activity filters and search, Saved setups under the Live session card, a real factory reset, a first-run checklist, Ctrl+Enter to start, a single scrollbar and no pinned bars in the popup, and a redesigned on-page Aurora panel.
 
