@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.6.2
+- The Live session card and the on-page Aurora panel show a running counter again: actions done / limit, steps left and a countdown to the next step.
+
 ## 2.6.1
 - Reels: `/reels/<id>/` links count as the same reel as `/reel/<id>/`, so an Instagram redirect between them no longer pauses the task; reel pages and post popups without an article/main wrapper are now found.
 

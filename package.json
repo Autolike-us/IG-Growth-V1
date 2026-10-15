@@ -1,6 +1,6 @@
 {
   "name": "aurora-instagram-studio",
-  "version": "2.6.1",
+  "version": "2.6.2",
   "private": true,
   "scripts": {
     "test": "node tests/planning.test.cjs && node tests/worker.test.cjs && node tests/report.test.cjs",
