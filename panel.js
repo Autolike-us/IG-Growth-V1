@@ -70,20 +70,24 @@ const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
   // "Target 2 of 5 · name · next in 24s", refreshed every second from the last job we saw.
   function tickNow(){
     const job=lastJob,el=$('now');if(!job){el.hidden=true;return;}
-    const left=job.queue?.length||0,part='\u00b7 '+(job.done||0)+'/'+(job.config?.limit||'?')+' done'+(left?' \u00b7 '+left+' step'+(left===1?'':'s')+' left':'');
+    const left=job.queue?.length||0,part='\u00b7 '+doneNow(job)+'/'+(job.config?.limit||'?')+' done'+(left?' \u00b7 '+left+' step'+(left===1?'':'s')+' left':'');
     if(job.status==='running'){const s=Math.max(0,Math.round(((job.nextAt||0)-Date.now())/1000));el.textContent='\u25b6 '+(s?'Next step in '+s+'s ':'Working\u2026 ')+part;el.hidden=false;}
     else if(job.status==='paused'){el.textContent='\u23f8 Paused '+part;el.hidden=false;}
     else el.hidden=true;
   }
   setInterval(tickNow,1000);
+  // Live progress written by an in-place walk while its step is still running.
+  let walk=null;
+  const walkOf=job=>walk&&job&&walk.id===job.id&&job.status==='running'&&Date.now()-walk.time<120000?walk:null;
+  const doneNow=job=>(job?.done||0)+(walkOf(job)?.acted||0);
   function render(job){
     lastJob=job;
     const paused=job?.status==='paused',running=job?.status==='running',active=paused||running,section=shadow.querySelector('section');
     // Mode badge: the live/preview nature of the current task, or the panel's own preview-only nature when idle.
     const live=job&&job.config&&job.config.dry===false&&active;$('chip').textContent=live?'⚡ LIVE':'👁 PREVIEW';$('chip').className='chip '+(live?'live':'preview');
-    if(job?.message)$('message').textContent=(job.config?.dry&&active?'Preview run — nothing is sent. ':'')+job.message;
+    if(job?.message)$('message').textContent=(job.config?.dry&&active?'Preview run — nothing is sent. ':'')+(walkOf(job)?.text||job.message);
     $('alert').hidden=!paused;$('toggle').classList.toggle('alert',paused);
-    $('toggle').textContent=paused?'🔔 Aurora needs you':running?'✦ Aurora · '+(job.done||0)+'/'+(job.config?.limit||'?'):'✦ Aurora';
+    $('toggle').textContent=paused?'🔔 Aurora needs you':running?'✦ Aurora · '+doneNow(job)+'/'+(job.config?.limit||'?'):'✦ Aurora';
     if(paused&&!wasPaused){section.hidden=false;$('toggle').setAttribute('aria-expanded','true');}
     if(running&&!wasRunning){section.hidden=true;$('toggle').setAttribute('aria-expanded','false');}
     wasRunning=running;wasPaused=paused;
@@ -91,13 +95,13 @@ const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
     $('idle').hidden=active;
     $('controls').hidden=!active;$('pause').hidden=!running;$('resume').hidden=!paused;$('stop').hidden=!active;
     $('reportRow').hidden=!paused;
-    const bar=$('bar');bar.hidden=!active;if(active){bar.max=Number(job.config?.limit)||10;bar.value=job.done||0;}
+    const bar=$('bar');bar.hidden=!active;if(active){bar.max=Number(job.config?.limit)||10;bar.value=doneNow(job);}
     const qp=$('quickPause');qp.hidden=!active;qp.textContent=paused?'▶ Resume':'⏸ Pause';qp.onclick=()=>send(paused?'resume':'pause');
     tickNow();
   }
   // When a captcha paused the task, notice that it has been solved in THIS tab and let the background continue (it checks that this is the task tab).
   let clearPolls=0;
   setInterval(async()=>{try{const {job}=await chrome.storage.local.get('job');if(job?.status!=='paused'||!job.waitingCaptcha){clearPolls=0;return;}if(globalThis.AuroraChallenge?.()){clearPolls=0;return;}if(++clearPolls>=2){clearPolls=0;await chrome.runtime.sendMessage({action:'captchaCleared'});}}catch{}},globalThis.__auroraCaptchaPollMs||2500);
-  chrome.storage.local.get('job').then(({job})=>render(job)).catch(error=>$('message').textContent=error.message);
-  chrome.storage.onChanged.addListener((changes,area)=>{if(area==='local'&&changes.job)render(changes.job.newValue);});
+  chrome.storage.local.get(['job','walk']).then(({job,walk:w})=>{walk=w||null;render(job);}).catch(error=>$('message').textContent=error.message);
+  chrome.storage.onChanged.addListener((changes,area)=>{if(area!=='local')return;if(changes.walk)walk=changes.walk.newValue||null;if(changes.job)render(changes.job.newValue);else if(changes.walk)render(lastJob);});
 })();

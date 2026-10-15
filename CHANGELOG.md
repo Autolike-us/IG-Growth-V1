@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.7.1
+- While a profile walk is running, the panel and studio now show live progress (current post, likes done so far, the waiting pause) and count each like as it happens, instead of staying at 0/N until the whole profile finishes.
+
 ## 2.7.0
 - Like (and comment) now work the way you would by hand: Aurora opens the first post of a profile in its popup, acts, presses the popup's Next arrow and repeats until the posts-per-profile / task limit, then closes the popup. No more loading each post by URL, so Instagram redirects can no longer stop the task. Already-liked posts are skipped, the last post ends the walk, photo-carousel arrows are ignored, and previews walk without clicking.
 - Hashtag/location sources and direct post links still open posts by URL.

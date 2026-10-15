@@ -87,7 +87,7 @@ async function tick(){
   if(r?.error){await dlog('error','Step failed: '+r.error,ctx(r));throw Error(r.error);}if(!r)throw Error('Instagram returned no result.');
   job.retries=0;
   if(r.wait){job.message=r.wait;job.nextAt=Date.now()+3000;await save(job);await schedule(job);return;}
-  job.queue.shift();const more=AuroraEngine.expand(job,step,r);job.queue.unshift(...more);
+  try{await chrome.storage.local.remove('walk');}catch{}job.queue.shift();const more=AuroraEngine.expand(job,step,r);job.queue.unshift(...more);
   let gap=quick();
   if(['users','posts','author'].includes(step.kind))job.message=`Discovered ${more.length} ${step.kind==='posts'?'posts':'profiles'}. ${r.note||''}`;
   else{if(r.performed||r.preview){const n=step.kind==='walk'?Math.max(1,r.count||1):1;gap=pause(job);job.done=(job.done||0)+n;if(r.performed){job.counts[job.config.action]+=n;for(let i=0;i<n;i++)await bumpDaily();}else job.previewed+=n;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}

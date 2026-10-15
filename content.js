@@ -130,6 +130,8 @@
  // The popup's own Next arrow (not a photo carousel's, which sits inside the article).
  const nextBtn=()=>{const all=[...document.querySelectorAll('svg[aria-label="Next"]')].map(v=>v.closest('button,[role="button"]')).filter(b=>b&&D.visible(b)&&outsideMain(b));return all.find(b=>!b.closest('article'))||all.find(b=>b.closest('._aaqg'))||null;};
  const gridTiles=()=>{const m=document.querySelector('main');return m?[...m.querySelectorAll('a[href]')].filter(a=>S.postURL(a.href)&&D.visible(a)&&a.querySelector('img')):[];};
+ // Live progress for the panel and studio (the background only updates the job when the whole walk ends).
+ const progress=(id,acted,text)=>chrome.storage.local.set({walk:{id,acted,text,time:Date.now()}}).catch(()=>{});
  async function sleepActive(ms,id){for(let t=0;t<ms;t+=1000){await active(id);await wait(Math.min(1000,ms-t));}}
  async function closePost(profileKey){
   for(let n=0;n<3&&postRoot();n++){
@@ -148,7 +150,7 @@
   if(!tile||tile==='none'){const t=document.body.innerText||'';const why=/This account is private/i.test(t)?'the account is private':/No posts yet/i.test(t)?'it has no posts':/this page isn.t available/i.test(t)?'the profile is unavailable':'no posts were found';return {message:`Skipped @${name}: ${why}.`};}
   const verb=c.action==='comment'?'commented on':'liked';
   const max=Math.max(1,Math.min(c.perUser,Math.max(1,(c.limit||1)-(s.done||0)),s.room==null?Infinity:Math.max(1,s.room)));
-  T('walk','@'+name,'tiles',gridTiles().length,'max',max);
+  T('walk','@'+name,'tiles',gridTiles().length,'max',max);await progress(id,0,'@'+name+': opening the first post…');
   tile.scrollIntoView({block:'center',behavior:'instant'});await think(700,1500);await active(id);tile.click();
   if(!await until(()=>S.postURL(location.href)&&postRoot(),id,15000))throw Error('The first post did not open. Check the task tab and resume.');
   let acted=0,lastSkip='',skippedLiked=0;const visited=new Set();
@@ -158,9 +160,10 @@
     const key=S.pageKey(location.href);if(visited.has(key))break;visited.add(key);
     await until(()=>{const r=postRoot();return r&&D.bar(r);},id,10000);
     const root=postRoot();if(!root)throw Error('Lost the open post. Check the task tab and resume.');
-    T('walk post',key);
+    T('walk post',key);await progress(id,acted,'@'+name+': post '+(visited.size)+' — '+(c.dry?'checking':c.action==='comment'?'commenting':'liking')+'…');
     const r=await postAction(c,id,root,actor);
     if(r.performed||r.preview)acted++;else{lastSkip=String(r.message||'').replace(/^Skipped:\s*/,'');if(/already liked/i.test(lastSkip))skippedLiked++;}
+    await progress(id,acted,'@'+name+': post '+visited.size+' '+(r.performed?'done ✓':r.preview?'checked':'skipped ('+lastSkip+')')+' · '+acted+'/'+max+' on this profile'+(acted<max&&r.performed?' · waiting before the next one…':''));
     if(acted>=max)break;
     // pace only after a real action; skipped posts move on quickly
     if(r.performed)await sleepActive(Math.round(c.delay*1000*(1+Math.random()*0.4)),id);

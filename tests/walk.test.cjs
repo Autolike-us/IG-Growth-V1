@@ -24,6 +24,7 @@ try{const ctx=await browser.newContext();let pg=await ctx.newPage();pg.setDefaul
  let r=await run({});check('walk likes the first 3 eligible posts (skipping one already liked) and reports the count',r.performed&&r.count===3&&/Liked 3 posts on @dabijou/.test(r.message)&&/1 already liked skipped/.test(r.message));
  check('exactly three like clicks were sent and the popup was closed',await pg.evaluate(()=>clicks===3&&!document.querySelector('[role=dialog]')&&__loc.pathname==='/dabijou/'));
  check('the photo-carousel Next arrow inside the article was never used (post order was reel, then photos)',await pg.evaluate(()=>liked.AAA111&&liked.CCC333&&liked.DDD444));
+ check('live progress is written while the walk runs (for the panel and studio)',await pg.evaluate(()=>data.walk&&data.walk.id==='test'&&data.walk.acted===3&&/post/.test(data.walk.text)));
  r=await run({dry:true});check('preview walks the posts without clicking Like',r.preview&&r.count===3&&await pg.evaluate(()=>clicks===0));
  r=await run({perUser:1});check('posts-per-profile of 1 stops after one like',r.performed&&r.count===1);
  r=await run({limit:5},{done:4});check('the remaining task limit is respected',r.performed&&r.count===1);
