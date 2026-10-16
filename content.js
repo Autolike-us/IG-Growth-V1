@@ -131,7 +131,7 @@
  const nextBtn=()=>{const all=[...document.querySelectorAll('svg[aria-label="Next"]')].map(v=>v.closest('button,[role="button"]')).filter(b=>b&&D.visible(b)&&outsideMain(b));return all.find(b=>!b.closest('article'))||all.find(b=>b.closest('._aaqg'))||null;};
  const gridTiles=()=>{const m=document.querySelector('main');return m?[...m.querySelectorAll('a[href]')].filter(a=>S.postURL(a.href)&&D.visible(a)&&a.querySelector('img')):[];};
  // Live progress for the panel and studio (the background only updates the job when the whole walk ends).
- const progress=(id,acted,text)=>chrome.storage.local.set({walk:{id,acted,text,time:Date.now()}}).catch(()=>{});
+ const progress=(id,acted,text,until,n,max)=>chrome.storage.local.set({walk:{id,acted,text,until:until||0,n:n||0,max:max||0,time:Date.now()}}).catch(()=>{});
  async function sleepActive(ms,id){for(let t=0;t<ms;t+=1000){await active(id);await wait(Math.min(1000,ms-t));}}
  async function closePost(profileKey){
   for(let n=0;n<3&&postRoot();n++){
@@ -160,13 +160,13 @@
     const key=S.pageKey(location.href);if(visited.has(key))break;visited.add(key);
     await until(()=>{const r=postRoot();return r&&D.bar(r);},id,10000);
     const root=postRoot();if(!root)throw Error('Lost the open post. Check the task tab and resume.');
-    T('walk post',key);await progress(id,acted,'@'+name+': post '+(visited.size)+' — '+(c.dry?'checking':c.action==='comment'?'commenting':'liking')+'…');
+    T('walk post',key);await progress(id,acted,'@'+name+': post '+(visited.size)+' — '+(c.dry?'checking':c.action==='comment'?'commenting':'liking')+'…',0,visited.size,max);
     const r=await postAction(c,id,root,actor);
     if(r.performed||r.preview)acted++;else{lastSkip=String(r.message||'').replace(/^Skipped:\s*/,'');if(/already liked/i.test(lastSkip))skippedLiked++;}
-    await progress(id,acted,'@'+name+': post '+visited.size+' '+(r.performed?'done ✓':r.preview?'checked':'skipped ('+lastSkip+')')+' · '+acted+'/'+max+' on this profile'+(acted<max&&r.performed?' · waiting before the next one…':''));
+    await progress(id,acted,'@'+name+': post '+visited.size+' '+(r.performed?'done ✓':r.preview?'checked':'skipped ('+lastSkip+')')+' · '+acted+'/'+max+' on this profile'+'',0,visited.size,max);
     if(acted>=max)break;
     // pace only after a real action; skipped posts move on quickly
-    if(r.performed)await sleepActive(Math.round(c.delay*1000*(1+Math.random()*0.4)),id);
+    if(r.performed){const ms=Math.round(c.delay*1000*(1+Math.random()*0.4));await progress(id,acted,'@'+name+': post '+visited.size+' done ✓ · '+acted+'/'+max+' on this profile',Date.now()+ms,visited.size,max);await sleepActive(ms,id);}
     const next=nextBtn();if(!next){T('no Next arrow: last post');break;}
     await active(id);await think(700,1800);next.click();
     if(!await until(()=>S.pageKey(location.href)!==key,id,8000)){T('Next did not advance');break;}

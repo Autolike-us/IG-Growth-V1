@@ -1,4 +1,4 @@
-importScripts('selectors.js','engine.js');
+importScripts('selectors.js','engine.js','license-config.js','license.js');
 const base='https://www.instagram.com/';
 let busy=false;
 // Errors raised before any click is sent; safe to retry while Instagram finishes rendering.
@@ -19,6 +19,7 @@ function dlog(level,msg,data){
  return logChain;
 }
 const short=u=>String(u||'').split('?')[0];
+function closeStep(job,step,r,note){(job.finished??=[]).push({label:step.label||short(step.url),state:r&&(r.performed||r.preview)?'done':'skipped',n:r?.count||(r&&(r.performed||r.preview)?1:0),note});if(job.finished.length>200)job.finished.shift();}
 const ctx=r=>[r?.trace?.length?'page trace: '+r.trace.join(' | '):'',r?.stack?'page error stack:\n'+r.stack:'',r?.diag||''].filter(Boolean).join('\n');
 globalThis.addEventListener?.('unhandledrejection',e=>dlog('error','Unhandled error in background',String(e.reason?.stack||e.reason).split('\n').slice(0,5).join('\n')));
 
@@ -67,6 +68,7 @@ async function tick(){
  try{
   const {job}=await chrome.storage.local.get('job');if(job?.status!=='running')return;
   if(!job.queue.length||(job.done||0)>=job.config.limit){await finish(job);return;}
+  if(job.config.dry===false){const lic=await AuroraLicense.check();if(!lic.allowed)throw Error('License: '+lic.message);}
   if(job.inFlight)throw Error('The last action was interrupted and its outcome is unknown. Check Instagram manually, stop this task, and create a new task for remaining targets.');
   if(Date.now()<(job.nextAt||0)){await schedule(job);return;}
   const step=job.queue[0];let tab;try{tab=await chrome.tabs.get(job.tabId);}catch{throw Error('The task tab was closed. Resume to open a new tab.');}
@@ -88,6 +90,8 @@ async function tick(){
   job.retries=0;
   if(r.wait){job.message=r.wait;job.nextAt=Date.now()+3000;await save(job);await schedule(job);return;}
   try{await chrome.storage.local.remove('walk');}catch{}job.queue.shift();const more=AuroraEngine.expand(job,step,r);job.queue.unshift(...more);
+  // Targets finished so far (for "Target 2 of 5"); a discovery step is replaced by the targets it found.
+  if(['walk','account','engage'].includes(step.kind))closeStep(job,step,r);else job.total=Math.max((job.finished?.length||0),(job.total||0)-1+more.length);
   let gap=quick();
   if(['users','posts','author'].includes(step.kind))job.message=`Discovered ${more.length} ${step.kind==='posts'?'posts':'profiles'}. ${r.note||''}`;
   else{if(r.performed||r.preview){const n=step.kind==='walk'?Math.max(1,r.count||1):1;gap=pause(job);job.done=(job.done||0)+n;if(r.performed){job.counts[job.config.action]+=n;for(let i=0;i<n;i++)await bumpDaily();}else job.previewed+=n;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}
@@ -106,28 +110,42 @@ async function taskTab(url){
 }
 async function resumeTask(){
  const {job}=await chrome.storage.local.get('job');if(!job)throw Error('Create a task first.');
+ if(job.config?.dry===false){const lic=await AuroraLicense.check();if(!lic.allowed)throw Error(lic.message);}
  if(job.inFlight)throw Error('Interrupted action: check Instagram manually, then stop this task and create a new task for remaining targets.');
  if(job.version!==2)throw Error('Stop the old-version task and create a new task.');if(job.status!=='paused')throw Error('Only paused tasks can resume.');
  try{await chrome.tabs.get(job.tabId);}catch{job.tabId=(await chrome.tabs.create({url:job.queue[0]?.url||base})).id;}
  job.status='running';job.waitingCaptcha=false;job.navigation=null;job.retries=0;job.nextAt=Date.now()+1000;job.message='Resumed.';
  await save(job);await schedule(job);await dlog('info','Resumed');return{ok:true,message:job.message};
 }
+async function skipTarget(){
+ if(busy)throw Error('A step is still finishing. Wait for its result before skipping.');
+ const {job}=await chrome.storage.local.get('job');if(job?.status!=='paused')throw Error('Only a paused task can skip its current target.');
+ const step=job.queue.shift();if(!step)throw Error('There is no target left to skip.');
+ closeStep(job,step,null,'skipped by you');job.skipped=(job.skipped||0)+1;job.inFlight=false;job.retries=0;job.navigation=null;
+ await dlog('info','You skipped '+short(step.url));
+ if(!job.queue.length){await save(job);await finish(job);return{ok:true,message:job.message};}
+ job.message='Skipped '+(step.label||'that target')+'. Continuing with the next one.';await save(job);await log(job.message);
+ return resumeTask();
+}
 chrome.runtime.onMessage.addListener((m,s,respond)=>{
  const ownPage=[chrome.runtime.getURL('dashboard.html'),chrome.runtime.getURL('popup.html')].includes(s.url?.split(/[?#]/)[0]);
- const panel=s.tab&&s.url?.startsWith(base)&&['openStudio','previewProfile','pause','resume','stop','captchaCleared'].includes(m.action);
+ const panel=s.tab&&s.url?.startsWith(base)&&['openStudio','previewProfile','pause','resume','stop','captchaCleared','skipTarget'].includes(m.action);
  if(s.id!==chrome.runtime.id||(!ownPage&&!panel)){respond({ok:false,error:'Dashboard commands only.'});return;}
  (async()=>{
   if(m.action==='openStudio'){await chrome.tabs.create({url:chrome.runtime.getURL('dashboard.html')});return{ok:true};}
-  if(m.action==='previewProfile')m={action:'start',config:{action:'like',mode:'users',target:m.target,perUser:3,limit:3,scanLimit:3,delay:30,maxAge:0,dailyCap:0,exclude:'',dry:true,videos:false}};
+  if(m.action==='previewProfile')m={action:'start',config:{action:'like',mode:'users',target:m.target,perUser:3,limit:3,scanLimit:3,delay:20,maxAge:0,dailyCap:0,exclude:'',dry:true,videos:false}};
   if(m.action==='save'){await chrome.storage.local.set({config:m.config});return{ok:true};}
   if(m.action==='start'){
+   if(m.config?.dry===false){const lic=await AuroraLicense.check();if(!lic.allowed)throw Error(lic.message);}
    if(busy)throw Error('A step is finishing. Try again shortly.');const old=(await chrome.storage.local.get('job')).job;if(['running','paused'].includes(old?.status))throw Error('Stop the current task first.');
    const config=AuroraEngine.config(m.config),queue=AuroraEngine.initial(config);if(!queue.length)throw Error('All targets are excluded.');
    await chrome.storage.local.set({config:m.config});const tab=await taskTab(queue[0].url);
-   const job={version:2,id:crypto.randomUUID(),config,queue,tabId:tab.id,status:'running',counts:{like:0,follow:0,unfollow:0,comment:0},done:0,liked:0,previewed:0,skipped:0,seen:[],seenUsers:[],nextAt:Date.now()+2000,message:`${config.dry?'Preview':'Live'} ${config.action} task started. Waiting for Instagram.`};
+   const job={version:2,id:crypto.randomUUID(),config,queue,total:queue.length,finished:[],tabId:tab.id,status:'running',counts:{like:0,follow:0,unfollow:0,comment:0},done:0,liked:0,previewed:0,skipped:0,seen:[],seenUsers:[],nextAt:Date.now()+2000,message:`${config.dry?'Preview':'Live'} ${config.action} task started. Waiting for Instagram.`};
    await save(job);await log(job.message);await dlog('info',job.message,{action:config.action,mode:config.mode,target:String(config.target||'').slice(0,200),limit:config.limit,perUser:config.perUser,scanLimit:config.scanLimit,delay:config.delay,dailyCap:config.dailyCap,preview:config.dry,steps:queue.length});await schedule(job);return{ok:true,message:job.message};
   }
   if(m.action==='captchaCleared'){const {job}=await chrome.storage.local.get('job');if(!job||job.status!=='paused'||!job.waitingCaptcha||s.tab?.id!==job.tabId)return{ok:false};await dlog('info','Captcha solved, continuing');return resumeTask();}
+  if(panel&&m.action==='skipTarget'){const {job}=await chrome.storage.local.get('job');if(job?.tabId!==s.tab.id)throw Error('Open the task tab to control this session.');}
+  if(m.action==='skipTarget')return skipTarget();
   if(m.action==='resume')return resumeTask();
   const {job}=await chrome.storage.local.get('job');if(!job)throw Error('Create a task first.');
   if(m.action!=='pause'&&m.action!=='stop')throw Error('Unknown action.');

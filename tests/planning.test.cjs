@@ -8,7 +8,7 @@ test('post URLs canonicalize and drop tracking',()=>assert.equal(S.postURL('http
 test('post identity ignores query and author prefix',()=>assert.equal(S.pageKey('https://www.instagram.com/alice/p/AbC-1/?x=1'),S.pageKey('https://www.instagram.com/p/AbC-1/')));
 test('profile identity tolerates tracking query params',()=>assert.equal(S.pageKey('https://www.instagram.com/Alice/?hl=en'),S.pageKey('https://www.instagram.com/alice/')));
 test('hashtag identity is case-insensitive',()=>assert.equal(S.pageKey('https://www.instagram.com/explore/tags/Travel/'),'tag:travel'));
-test('delay below 30 seconds is rejected',()=>assert.throws(()=>config({delay:5})));
+test('delay below 5 seconds is rejected, 5 is allowed',()=>{assert.throws(()=>config({delay:4}));assert.equal(config({delay:5}).delay,5);});
 test('daily cap is optional and validated',()=>{assert.equal(config().dailyCap,0);assert.equal(config({dailyCap:150}).dailyCap,150);assert.throws(()=>config({dailyCap:-1}));assert.throws(()=>config({dailyCap:10001}));});
 test('unfollow only works from an explicit list',()=>assert.throws(()=>config({action:'unfollow',mode:'hashtag',target:'#x'})));
 test('comment needs text up to 2200 characters',()=>{assert.throws(()=>config({action:'comment',comment:''}));assert.throws(()=>config({action:'comment',comment:'x'.repeat(2201)}));assert.equal(config({action:'comment',comment:'Nice!'}).comment,'Nice!');});

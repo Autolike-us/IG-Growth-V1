@@ -7,7 +7,6 @@
   shadow.innerHTML = `<style>
     :host{all:initial;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;
       --bg:#fff;--ink:#1c1e21;--muted:#65676b;--line:#dadde1;--soft:#f0f2f5;--accent:#d62976;--ok:#12a594;--bad:#d4222a;--warnbg:#fff3d6;--warnink:#8a5200;--livebg:#ffe9ea;--liveink:#b3202a}
-    @media(prefers-color-scheme:dark){:host{--bg:#242526;--ink:#e4e6eb;--muted:#b0b3b8;--line:#3e4042;--soft:#3a3b3c;--warnbg:#4a3a14;--warnink:#ffcf7a;--livebg:#4a2326;--liveink:#ff9aa0}}
     *{box-sizing:border-box}
     button,input{font:inherit;color:inherit}
     button{cursor:pointer;border:1px solid var(--line);border-radius:12px;background:var(--soft);color:var(--ink);padding:9px 13px;font-weight:600}
@@ -45,15 +44,17 @@
       <div class="row"><button id="preview" class="primary">Preview profile</button></div>
       <p class="note">Checks up to 3 posts. Preview never sends engagement actions.</p>
     </div>
-    <div class="row" id="controls"><button id="pause">Pause</button><button id="resume">Resume</button><button id="stop">Stop</button></div>
+    <div class="row" id="controls"><button id="pause">Pause</button><button id="resume">Resume</button><button id="skip">↷ Skip this target</button><button id="stop">Stop</button></div>
     <div class="row"><button id="studio">Open full studio</button><button id="check">Check page</button></div>
     <div class="row" id="reportRow"><button id="copyReport">Copy error report</button></div>
     <pre id="report" hidden></pre>
+    <p class="note"><a id="help" target="_blank" rel="noreferrer">Report an issue or contact us</a></p>
   </section>
   <div class="bar"><button id="quickPause" hidden>⏸ Pause</button><button id="toggle" aria-expanded="false">✦ Aurora</button></div>`;
   document.documentElement.append(host);
   const $ = id => shadow.getElementById(id);
   try { $('ver').textContent = chrome.runtime.getManifest().version; } catch {}
+  try { const c = (typeof AuroraLicenseConfig !== 'undefined' && AuroraLicenseConfig) || {}, v = chrome.runtime.getManifest().version, n = ({ tiktok: 'TikTok' })[c.product] || String(c.product || 'studio').replace(/^./, x => x.toUpperCase()); $('help').href = 'mailto:' + (c.supportEmail || 'support@getaurorastudios.com') + '?subject=' + encodeURIComponent('[Aurora ' + n + ' ' + v + '] Issue report or question') + '&body=' + encodeURIComponent('What happened?\n\n\n--- Details ---\nAurora ' + n + ' ' + v + ' · ' + navigator.userAgent.slice(0, 110) + '\nPage: ' + location.hostname + '\n'); } catch {}
 const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
   if (profile && !['explore','reels','direct','accounts'].includes(profile)) $('target').value=profile;
   $('toggle').onclick=()=>{const section=shadow.querySelector('section');section.hidden=!section.hidden;$('toggle').setAttribute('aria-expanded',String(!section.hidden));};
@@ -65,14 +66,15 @@ const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
   $('studio').onclick=()=>send('openStudio');
   $('copyReport').onclick=async()=>{try{const t=await globalThis.AuroraReport.build(80);await navigator.clipboard.writeText(t);$('message').textContent='Error report copied. Paste it into your message.';}catch(e){$('message').textContent='Could not copy the report: '+e.message;}};
   $('check').onclick=async()=>{const r=$('report');try{const text=globalThis.AuroraDiagnose?globalThis.AuroraDiagnose():'Check unavailable on this page.';r.textContent=text;r.hidden=false;try{await navigator.clipboard.writeText(text);$('message').textContent='Page check copied to your clipboard.';}catch{$('message').textContent='Page check shown below.';}}catch(e){r.textContent='Check failed: '+e.message;r.hidden=false;}};
-  for(const action of ['pause','resume','stop'])$(action).onclick=()=>send(action);
+  for(const action of ['pause','resume','stop','skip'])$(action).onclick=()=>send(action==='skip'?'skipTarget':action);
   let wasPaused=false,wasRunning=false,lastJob=null;
   // "Target 2 of 5 · name · next in 24s", refreshed every second from the last job we saw.
   function tickNow(){
     const job=lastJob,el=$('now');if(!job){el.hidden=true;return;}
-    const left=job.queue?.length||0,part='\u00b7 '+doneNow(job)+'/'+(job.config?.limit||'?')+' done'+(left?' \u00b7 '+left+' step'+(left===1?'':'s')+' left':'');
-    if(job.status==='running'){const s=Math.max(0,Math.round(((job.nextAt||0)-Date.now())/1000));el.textContent='\u25b6 '+(s?'Next step in '+s+'s ':'Working\u2026 ')+part;el.hidden=false;}
-    else if(job.status==='paused'){el.textContent='\u23f8 Paused '+part;el.hidden=false;}
+    const left=job.queue?.length||0,w=walkOf(job),total=job.total||0,idx=total?Math.min((job.finished?.length||0)+1,total):0,label=job.queue?.[0]?.label;
+    const lead=(idx?'Target '+idx+' of '+total+' \u00b7 ':'')+(label?label+' \u00b7 ':''),part=doneNow(job)+'/'+(job.config?.limit||'?')+' done'+(left?' \u00b7 '+left+' step'+(left===1?'':'s')+' left':'');
+    if(job.status==='running'){const s=Math.max(0,Math.round((Math.max(job.nextAt||0,w?.until||0)-Date.now())/1000));el.textContent='\u25b6 '+lead+(w?.n?'post '+w.n+'/'+w.max+' \u00b7 ':'')+(s?(w?.until>Date.now()?'next post in ':'next in ')+s+'s \u00b7 ':'working\u2026 \u00b7 ')+part;el.hidden=false;}
+    else if(job.status==='paused'){el.textContent='\u23f8 Paused \u00b7 '+lead+part;el.hidden=false;}
     else el.hidden=true;
   }
   setInterval(tickNow,1000);
@@ -93,15 +95,18 @@ const profile = location.pathname.match(/^\/([\w.]+)\/?$/)?.[1];
     wasRunning=running;wasPaused=paused;
     // Only show what applies right now.
     $('idle').hidden=active;
-    $('controls').hidden=!active;$('pause').hidden=!running;$('resume').hidden=!paused;$('stop').hidden=!active;
+    $('controls').hidden=!active;$('pause').hidden=!running;$('resume').hidden=!paused;$('skip').hidden=!(paused&&(job.queue?.length||0)>0);$('stop').hidden=!active;
     $('reportRow').hidden=!paused;
     const bar=$('bar');bar.hidden=!active;if(active){bar.max=Number(job.config?.limit)||10;bar.value=doneNow(job);}
     const qp=$('quickPause');qp.hidden=!active;qp.textContent=paused?'▶ Resume':'⏸ Pause';qp.onclick=()=>send(paused?'resume':'pause');
     tickNow();
+    lic();
   }
+  // Locked until a valid license key has been added in the studio.
+  async function lic(){try{if(typeof AuroraLicense==='undefined')return;const st=await AuroraLicense.peek(),busy=['running','paused'].includes(lastJob?.status);$('preview').disabled=busy;}catch{}}
   // When a captcha paused the task, notice that it has been solved in THIS tab and let the background continue (it checks that this is the task tab).
   let clearPolls=0;
   setInterval(async()=>{try{const {job}=await chrome.storage.local.get('job');if(job?.status!=='paused'||!job.waitingCaptcha){clearPolls=0;return;}if(globalThis.AuroraChallenge?.()){clearPolls=0;return;}if(++clearPolls>=2){clearPolls=0;await chrome.runtime.sendMessage({action:'captchaCleared'});}}catch{}},globalThis.__auroraCaptchaPollMs||2500);
   chrome.storage.local.get(['job','walk']).then(({job,walk:w})=>{walk=w||null;render(job);}).catch(error=>$('message').textContent=error.message);
-  chrome.storage.onChanged.addListener((changes,area)=>{if(area!=='local')return;if(changes.walk)walk=changes.walk.newValue||null;if(changes.job)render(changes.job.newValue);else if(changes.walk)render(lastJob);});
+  chrome.storage.onChanged.addListener((changes,area)=>{if(area!=='local')return;if(changes.license)lic();if(changes.walk)walk=changes.walk.newValue||null;if(changes.job)render(changes.job.newValue);else if(changes.walk)render(lastJob);});
 })();
