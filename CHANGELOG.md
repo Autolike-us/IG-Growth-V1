@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1
+- New: Telegram channel "Aurora Studios Report" for bug reports, feature requests and ideas — linked in the footer of the studio and the toolbar popup (next to Report an issue and Contact us).
+
 ## 1.0.0
 - Pace floor lowered to 5 seconds between steps (default 20).
 - Preview works without a license; only live tasks need a key. The trial (3 days, no subscription or payment method) is advertised in the License box.
