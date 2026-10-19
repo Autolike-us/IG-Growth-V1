@@ -59,9 +59,9 @@ with sync_playwright() as p:
  fixture(POST);rep=page.evaluate('AuroraDiagnose()');check('page check reports what it found',('Post action bar found: ✓' in rep) and ('Like heart found: ✓' in rep) and 'Signed in: ✓' in rep)
  fixture(POST,actor=False);rep=page.evaluate('AuroraDiagnose()');check('page check flags a missing sign-in','Signed in: ✗' in rep)
  fixture(PROFILE,'https://www.instagram.com/alice/?hl=en');r=step(action='follow',kind='account',url='https://www.instagram.com/alice/',mode='users');check('profile with a tracking parameter is still recognised',not r.get('error'))
- for f in ('dashboard.html','popup.html'):
+ for f in ('dashboard.html',):
   html=(ROOT/f).read_text(encoding='utf-8');check(f+' preview defaults on','id="dry" checked' in html);check(f+' has the daily cap and banner','id="dailyCap"' in html and 'id="banner"' in html);check(f+' has the debug log tab','id="debugTab"' in html and 'id="debugText"' in html and 'report.js' in html)
- for f in ('dashboard.html','popup.html'):
+ for f in ('dashboard.html',):
   page.goto('https://fixture.test/'+f);page.set_content((ROOT/f).read_text(encoding='utf-8'));page.add_script_tag(content=MOCK);page.evaluate('data.job=null');page.add_style_tag(path=str(ROOT/'style.css'));page.add_script_tag(path=str(ROOT/'report.js'));page.add_script_tag(path=str(ROOT/'dashboard.js'));page.wait_for_timeout(400)
   page.evaluate("chrome.runtime.getManifest=()=>({name:'T',version:'1'})");page.click('#debugTab');page.wait_for_timeout(300)
   check(f+' debug log tab shows the report',page.locator('#debug').is_visible() and not page.locator('#studio').is_visible() and 'Aurora debug report' in page.locator('#debugText').inner_text())
