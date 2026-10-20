@@ -24,7 +24,7 @@ with sync_playwright() as p:
  page=context.new_page()
  def fixture(body,url=URL,actor=True):
   page.goto(url);page.set_content((NAV if actor else '')+body);page.add_script_tag(content=MOCK)
-  for f in ['selectors.js','dom.js','content.js']:page.add_script_tag(path=str(ROOT/f))
+  for f in ['selectors.js','dom.js','comments.js','content.js']:page.add_script_tag(path=str(ROOT/f))
  def step(action='like',dry=True,kind='engage',url=URL,**extra):
   c=dict(action=action,dry=dry,mode='posts',exclude=[],maxAge=0,videos=False,scanLimit=2,perUser=2,comment='Nice!');c.update(extra)
   return page.evaluate('''arg=>new Promise(resolve=>listeners[0]({action:'step',step:{kind:arg.kind,url:arg.url,username:'alice'},config:arg.c,jobId:'test'},{id:'extension'},resolve))''',dict(kind=kind,url=url,c=c))
@@ -42,6 +42,22 @@ with sync_playwright() as p:
  fixture(POST.replace('<span>Hello','<span>Too many attempts, Action Blocked, Try Again Later'));r=step();check('warning words inside a comment do not stop the task',bool(r.get('preview')) and not r.get('error'))
  fixture(POST.replace('<main>','<main><div role="dialog">Try Again Later</div>'));r=step();check('warning shown in a dialog does stop the task',bool(r.get('error')) and 'restricted' in r.get('error',''))
  fixture(COMMENT_POST);page.evaluate(RERENDER);r=step(action='comment',dry=False,comment='Nice!');check('comment is posted even when Instagram re-renders the comment box',bool(r.get('performed')) and not r.get('error'))
+
+ # comment variants: a different comment on each post. Never repeats until all were used; the next round does not start with the comment just used.
+ used=[];keep=None
+ for n in range(1,5):
+  vurl='https://www.instagram.com/p/VAR%d/'%n
+  fixture(COMMENT_POST,vurl);page.evaluate(RERENDER)
+  if keep is not None:page.evaluate('u=>{data.commentUse=u}',keep)
+  r=step(action='comment',dry=False,url=vurl,comment='alpha\nbeta\ngamma',commentMany=True,commentList=['alpha','beta','gamma'],commentSeed='seed-1')
+  rows=page.evaluate("document.getElementById('rows').innerText");keep=page.evaluate('data.commentUse')
+  used.append(next((w for w in ('alpha','beta','gamma') if w in rows),None) if r.get('performed') else None)
+ check('comment variants: three posts get three different comments, and the fourth starts a new round with another one',None not in used and len(set(used[:3]))==3 and used[3]!=used[2])
+ fixture(COMMENT_POST);r=step(action='comment',dry=True,comment='alpha\nbeta',commentMany=True,commentList=['alpha','beta'],commentSeed='s');check('comment variants: the preview says one of your comments, and types nothing',bool(r.get('preview')) and 'one of your 2 comments' in r.get('message','') and page.locator('textarea').input_value()=='')
+
+ # Instagram's own error page is reported as such (and is retried by the worker), not as "no posts"
+ fixture("<main><div>Something went wrong</div><div>There's an issue and the page could not be loaded.</div><button>Reload page</button></main>",'https://www.instagram.com/explore/search/keyword/?q=%23mexico');r=step(kind='posts',action='like',mode='hashtag',url='https://www.instagram.com/explore/search/keyword/?q=%23mexico');check("Instagram's \"Something went wrong\" page is named as Instagram's, so the worker can reload it",'Something went wrong' in r.get('error','') and 'not from Aurora' in r.get('error',''))
+ fixture('<main><div>Nothing here</div></main>','https://www.instagram.com/explore/search/keyword/?q=%23mexico');r=step(kind='posts',action='like',mode='hashtag',url='https://www.instagram.com/explore/search/keyword/?q=%23mexico');check('an empty page still gives the old "No posts appeared" message',r.get('error','').startswith('No posts appeared'))
  fixture(POST);page.add_script_tag(path=str(ROOT/'content.js'));check('content script is safe to inject twice',page.evaluate('listeners.length')==1)
  fixture(POST.replace('<a href="/alice/">alice','<a href="/me/">me'));r=step(dry=False);check('your own post is skipped, nothing is clicked',not r.get('performed') and 'own post' in r.get('message','') and page.evaluate('clicks')==0)
  fixture(POST.replace('<main>','<main><div id="captcha_container" class="captcha_verify_container" style="display:block"></div>'));r=step();check('an empty captcha placeholder does not stop the task',bool(r.get('preview')) and not r.get('error'))

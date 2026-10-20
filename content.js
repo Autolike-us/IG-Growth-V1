@@ -95,12 +95,13 @@
    const findField=()=>[...(root).querySelectorAll('textarea'),...document.querySelectorAll('textarea')].filter(D.visible).find(e=>/comment/i.test(e.placeholder||e.getAttribute('aria-label')||''))||null;
    const field=await until(findField,id);T('comment box found',!!field);
    if(!field)return {message:'Skipped: comments are disabled or the comment field is unavailable.'};
-   if(c.dry)return {preview:true,message:`Preview comment: ${c.comment}. Nothing posted.`};
+   if(c.dry)return {preview:true,message:`Preview comment: ${c.commentMany?'one of your '+c.commentList.length+' comments (a different one on each post)':c.comment}. Nothing posted.`};
    if(!actor)throw Error('Cannot identify the signed-in account. Refresh Instagram.');
    const key=`${actor}:comment:${S.pageKey(location.href)}`;
    const {receipts={}}=await chrome.storage.local.get('receipts');if(receipts[key])return {message:'Skipped: Aurora already attempted a comment on this post. No duplicate sent.'};
-   if(field.value.trim()&&field.value.trim()!==c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
-   const want=c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim();
+   const text=c.commentMany?await AuroraComments.pick(c,key):c.comment;
+   if(field.value.trim()&&field.value.trim()!==text.replace(/\s*[\r\n]+\s*/g,' ').trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
+   const want=text.replace(/\s*[\r\n]+\s*/g,' ').trim();
    const ownComment=()=>D.commentRows(root).some(row=>D.names(row)[0]===actor&&row.textContent.includes(want));
    if(ownComment())return {message:'Skipped: your comment is already visible.'};
    await active(id);await think(500,1400);
@@ -185,11 +186,11 @@
    const read=()=>[...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(Boolean);
    const empty=()=>{if(!s.username)return null;const t=document.body.innerText||'';return /This account is private|This Account is Private/i.test(t)?'the account is private':/No posts yet|No Posts Yet/i.test(t)?'it has no posts':/Sorry, this page isn.t available|The link you followed may be broken|Page Not Found/i.test(t)?'the profile is unavailable':null;};
    const ready=await until(()=>read().length||empty(),id,15000);
-   if(!ready)throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');
+   if(!ready){if(/Something went wrong|page could not be loaded/i.test(document.body.innerText||''))throw Error('Instagram showed “Something went wrong” for this page (this comes from Instagram, not from Aurora). Open the same page by hand to see if it loads, or choose a profile, a place or your home feed instead.');throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');}
    if(!read().length)T('empty profile:',ready);
    if(!read().length)return {posts:[],note:`Skipped @${s.username}: ${ready}.`};
    T('post links',read().length);
-   const posts=await collect(root,read,['hashtag','location'].includes(c.mode)?c.scanLimit:c.perUser,id);
+   const posts=await collect(root,read,['hashtag','location','feed'].includes(c.mode)?c.scanLimit:c.perUser,id);
    return {posts,note:'Collected available posts within your scan limit.'};
   }
   if(s.kind==='users'){

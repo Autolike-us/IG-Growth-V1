@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0 — Follow + like, home feed, different comments
+- **Follow + like**: a new action. For profiles it follows each account and then likes its posts; for a hashtag, place, home feed or post links it likes each post and follows its author. Both actions count toward the task limit and the daily cap.
+- **Your home feed** is a new source: Aurora scrolls your own feed and uses the posts it finds, up to the discovery limit. No target needed.
+- **A different comment on each post**: write one comment per line and tick the new box; Aurora picks one at random for each post and does not repeat a comment until all have been used.
+- Instagram's own "Something went wrong" page is now recognised: Aurora reloads it (and tries the other form of a hashtag address) instead of reading an empty page, and says clearly when the problem comes from Instagram.
+
 ## 1.1.0 — New popup and a fresher dashboard
 - The toolbar popup is now a small status card: what is running, Pause / Stop, today's count against your daily limit, your license, and **Open dashboard**. It cannot start or resume anything.
 - Everything else (new tasks, saved setups, history, debug log) lives in the full dashboard tab, which opens from the popup. It re-uses the tab if it is already open.

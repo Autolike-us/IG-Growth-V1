@@ -1,17 +1,18 @@
-const $=id=>document.getElementById(id); const fields=['action','comment','scanLimit','mode','target','perUser','limit','delay','maxAge','dailyCap','exclude','dry','videos'];
-const hints={users:'Separate usernames with commas or new lines.',followers:'One username. Loads available accounts from the follower dialog up to the discovery limit.',following:'One username. Loads available accounts from the following dialog up to the discovery limit.',commenters:'Paste an Instagram post URL. Discovers currently rendered commenters.',likers:'Paste an Instagram post URL. Discovers accounts from the visible likes dialog.',hashtag:'Enter one #hashtag, its /explore/tags/ URL, or Instagram hashtag search URL.',location:'Paste a specific place URL or numeric location ID. Country/city directories do not contain posts.',posts:'Paste post or reel URLs, separated by commas or new lines.'};
+const $=id=>document.getElementById(id); const fields=['action','comment','commentMany','scanLimit','mode','target','perUser','limit','delay','maxAge','dailyCap','exclude','dry','videos'];
+const hints={feed:'Nothing to enter: Aurora uses the posts in your own home feed, scrolling it for you, up to the discovery limit.',users:'Separate usernames with commas or new lines.',followers:'One username. Loads available accounts from the follower dialog up to the discovery limit.',following:'One username. Loads available accounts from the following dialog up to the discovery limit.',commenters:'Paste an Instagram post URL. Discovers currently rendered commenters.',likers:'Paste an Instagram post URL. Discovers accounts from the visible likes dialog.',hashtag:'Enter one #hashtag, its /explore/tags/ URL, or Instagram hashtag search URL.',location:'Paste a specific place URL or numeric location ID. Country/city directories do not contain posts.',posts:'Paste post or reel URLs, separated by commas or new lines.'};
 function settings(){return Object.fromEntries(fields.map(k=>[k,$(k).type==='checkbox'?$(k).checked:$(k).value]));}
 let licenseOk=true,jobActive=false;const canRun=()=>licenseOk||$('dry').checked,refreshStart=()=>{$('start').disabled=jobActive||!canRun();};
 function notice(s){$('notice').textContent=s;}
 async function send(action,data={}){try{const r=await chrome.runtime.sendMessage({action,...data});if(!r?.ok)throw Error(r?.error||'No response');notice(r.message||'Saved.');await render();return true;}catch(e){notice(e.message);return false;}}
-const DISCOVERY=['followers','following','commenters','likers','hashtag','location'],PROFILE_POSTS=['users','followers','following','commenters','likers'];
+const DISCOVERY=['followers','following','commenters','likers','hashtag','location','feed'],PROFILE_POSTS=['users','followers','following','commenters','likers'];
 function updateForm(){
- const action=$('action').value,unfollow=action==='unfollow',post=['like','comment'].includes(action);
+ const action=$('action').value,unfollow=action==='unfollow',post=['like','comment','followlike'].includes(action);
  for(const option of $('mode').options)option.disabled=unfollow&&option.value!=='users';
  if(unfollow)$('mode').value='users';
  const mode=$('mode').value;
  $('commentGroup').hidden=action!=='comment';$('comment').required=action==='comment';
- $('actionHint').textContent=({like:'Likes eligible '+(mode==='posts'?'posts you link':'posts from the source')+'. Preview first.',follow:'Follows discovered accounts, or the authors of discovered posts.',unfollow:'Only usernames you explicitly enter will be unfollowed.',comment:'Posts your exact comment on eligible posts. Preview first.'})[action];
+ {const cm=$('comment'),many=$('commentMany').checked;cm.dataset.max=cm.dataset.max||cm.maxLength;cm.maxLength=many?6000:+cm.dataset.max;cm.placeholder=many?'One comment per line — for example:\nLove this!\nSuch a great shot\nThanks for sharing':'Write the exact comment you want posted';const h=$('commentGroup').querySelector('.hint');h.dataset.one=h.dataset.one||h.textContent;h.textContent=many?'Each post gets one of the comments above (one per line), chosen at random. Aurora still attempts at most one comment per post.':h.dataset.one;}
+ $('actionHint').textContent=({like:'Likes eligible '+(mode==='posts'?'posts you link':'posts from the source')+'. Preview first.',follow:'Follows discovered accounts, or the authors of discovered posts.',followlike:'Follows each account and likes its posts. From a list of posts (hashtag, place, feed or links) it likes each post and follows its author.',unfollow:'Only usernames you explicitly enter will be unfollowed.',comment:'Posts your exact comment on eligible posts. Preview first.'})[action];
  $('hint').textContent=unfollow?'Exact usernames you already follow, separated by commas or new lines.':hints[mode];
  // Hide what this action and source do not use (values are kept, so switching back restores them).
  document.querySelector('label[for="mode"]').hidden=unfollow;$('mode').hidden=unfollow;
@@ -23,9 +24,10 @@ function updateForm(){
  document.querySelector('label[for="target"]').textContent=unfollow?'Usernames to unfollow':'Target';
  document.querySelector('label[for="perUser"]').textContent=action==='comment'?'Posts to comment on per profile':'Posts to like per profile';
  paintMode();
- $('target').placeholder=({location:'https://www.instagram.com/explore/locations/123/place/',hashtag:'#travel or a hashtag URL',posts:'Post or reel URLs',commenters:'A post URL',likers:'A post URL'})[mode]||'@username, one or more usernames';
+ {const isFeed=mode==='feed';$('target').disabled=isFeed;$('target').required=!isFeed;document.querySelector('label[for="target"]').textContent=unfollow?'Usernames to unfollow':isFeed?'Source':'Target';}
+ $('target').placeholder=({feed:'Not needed — Aurora uses your home feed',location:'https://www.instagram.com/explore/locations/123/place/',hashtag:'#travel or a hashtag URL',posts:'Post or reel URLs',commenters:'A post URL',likers:'A post URL'})[mode]||'@username, one or more usernames';
 }
-$('mode').onchange=()=>{disarm();updateForm();};$('action').onchange=()=>{disarm();updateForm();rememberForm();};
+$('mode').onchange=()=>{disarm();updateForm();};$('commentMany').addEventListener('change',()=>{disarm();updateForm();});$('action').onchange=()=>{disarm();updateForm();rememberForm();};
 let armed=null;
 const startLabel=()=>$('dry').checked?'✦ Start preview':'✦ Start live task';
 function disarm(){clearTimeout(armed);armed=null;$('start').textContent=startLabel();}
@@ -44,8 +46,8 @@ function paintMode(){
 $('dry').addEventListener('change',()=>{disarm();paintMode();refreshStart();});
 $('task').onsubmit=async e=>{e.preventDefault();if(!canRun()){notice('Live tasks need a license key. Preview works without one — or add your key above (free 3-day trial, no card needed).');$('licKey')?.focus();return;}const config=settings();
  if(!config.dry&&!armed){
-  $('start').textContent='⚠ Confirm live '+config.action+' task';
-  notice('Live mode: this will really '+config.action+' (limit '+config.limit+', target: '+config.target+(config.action==='comment'?', comment: '+config.comment:'')+'). Click the button again within 15 seconds to confirm, or tick Preview only to cancel.');
+  $('start').textContent='⚠ Confirm live '+(config.action==='followlike'?'follow + like':config.action)+' task';
+  notice('Live mode: this will really '+(config.action==='followlike'?'follow and like':config.action)+' (limit '+config.limit+', target: '+(config.mode==='feed'?'your home feed':config.target)+(config.action==='comment'?', comment: '+(config.commentMany?'a different one of your '+String(config.comment).split(/\r?\n/).filter(x=>x.trim()).length+' comments on each post':config.comment):'')+'). Click the button again within 15 seconds to confirm, or tick Preview only to cancel.');
   armed=setTimeout(()=>{disarm();notice('Live confirmation expired. Nothing was started.');},15000);return;
  }
  disarm();$('start').disabled=true;notice('Starting… opening your Instagram task tab.');const ok=await send('start',{config});await render();
@@ -105,19 +107,19 @@ try{document.querySelectorAll('header .badge').forEach(b=>{b.textContent='✦ v'
 // ================= Navigation upgrades =================
 const ui={};
 function saveUi(){try{chrome.storage.local.set({ui}).catch(()=>{});}catch{}}
-const ACTION_NAMES={like:'Like',follow:'Follow',unfollow:'Unfollow',comment:'Comment on'};
+const ACTION_NAMES={like:'Like',follow:'Follow',followlike:'Follow + like',unfollow:'Unfollow',comment:'Comment on'};
 const targetList=()=>[...new Set($('target').value.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean))];
 
 // ---- one-line summary above Start, plus the collapsed-section captions ----
 function paintSummary(){
- const dry=$('dry').checked,action=$('action').value,mode=$('mode').value,n=targetList().length;
+ const dry=$('dry').checked,action=$('action').value,mode=$('mode').value,n=mode==='feed'?1:targetList().length;
  const perUser=Number($('perUser').value)||1,limit=Number($('limit').value)||1,delay=Number($('delay').value)||20,cap=Number($('dailyCap').value)||0;
- const post=['like','comment'].includes(action),perTarget=post&&PROFILE_POSTS.includes(mode),discover=action!=='unfollow'&&DISCOVERY.includes(mode);
+ const post=['like','comment','followlike'].includes(action),perTarget=post&&PROFILE_POSTS.includes(mode),discover=action!=='unfollow'&&DISCOVERY.includes(mode);
  const steps=n?Math.min(limit,perTarget&&!discover?n*perUser:discover?limit:n):0,secs=Math.round(steps*delay*1.2+n*6);
  const eta=!steps?'':secs<100?'about 1–2 min':'about '+Math.round(secs/60)+' min';
  const el=$('startSummary');el.className='summary '+(dry?'is-preview':'is-live');el.textContent='';
  const tag=document.createElement('b');tag.textContent=dry?'PREVIEW':'LIVE';
- el.append(tag,' · '+ACTION_NAMES[action]+' '+(n?n+' target'+(n===1?'':'s'):'—  add a target to begin')+(n&&perTarget&&!discover?' · up to '+perUser+' each':'')+(n&&discover?' · up to '+limit+' actions':'')+' · every ~'+delay+'s'+(eta?' · '+eta:''));
+ el.append(tag,' · '+ACTION_NAMES[action]+' '+(n?(mode==='feed'?'your home feed':n+' target'+(n===1?'':'s')):'—  add a target to begin')+(n&&perTarget&&!discover?' · up to '+perUser+' each':'')+(n&&discover?' · up to '+limit+' actions':'')+' · every ~'+delay+'s'+(eta?' · '+eta:''));
  $('paceSum').textContent=(perTarget&&!discover?perUser+' per target · ':'')+'limit '+limit+' · every '+delay+'s · cap '+(cap>0?cap:'off');
  const ex=$('exclude').value.split(/[,\n]+/).map(s=>s.trim()).filter(Boolean).length;$('advSum').textContent=ex?'excluding '+ex:'none set';
 }
