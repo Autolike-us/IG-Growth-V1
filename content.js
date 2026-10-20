@@ -168,9 +168,23 @@
     if(acted>=max)break;
     // pace only after a real action; skipped posts move on quickly
     if(r.performed){const ms=Math.round(c.delay*1000*(1+Math.random()*0.4));await progress(id,acted,'@'+name+': post '+visited.size+' done ✓ · '+acted+'/'+max+' on this profile',Date.now()+ms,visited.size,max);await sleepActive(ms,id);}
-    const next=nextBtn();if(!next){T('no Next arrow: last post');break;}
-    await active(id);await think(700,1800);next.click();
-    if(!await until(()=>S.pageKey(location.href)!==key,id,8000)){T('Next did not advance');break;}
+    const next=nextBtn();
+    if(next){
+     await active(id);await think(700,1800);next.click();
+     if(!await until(()=>S.pageKey(location.href)!==key,id,8000)){T('Next did not advance');break;}
+     await think(700,1500);continue;
+    }
+    // No Next arrow (Instagram sometimes opens posts as plain pages): go back to the grid and open the next unvisited tile.
+    T('no Next arrow: back to the grid');
+    await closePost(profileKey);await think(700,1500);await active(id);
+    let nextTile=null;
+    for(let tries=0;tries<6&&!nextTile;tries++){
+     nextTile=gridTiles().find(a=>!visited.has(S.pageKey(a.href)))||null;
+     if(!nextTile){const tl=gridTiles();if(tl.length)tl[tl.length-1].scrollIntoView({block:'center',behavior:'instant'});window.scrollBy(0,innerHeight*0.8);await wait(1200);}
+    }
+    if(!nextTile){T('no more posts on the grid');break;}
+    nextTile.scrollIntoView({block:'center',behavior:'instant'});await think(700,1500);await active(id);nextTile.click();
+    if(!await until(()=>S.postURL(location.href)&&postRoot(),id,15000)){T('next post did not open');break;}
     await think(700,1500);
    }
   }finally{try{await closePost(profileKey);}catch{}}

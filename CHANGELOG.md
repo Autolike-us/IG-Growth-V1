@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.1 — Profiles without a Next arrow
+- Fixed: when Instagram opens a post as a plain page (no left/right arrow), Aurora used to stop after the first post. It now closes the post, opens the next picture on the profile grid, and continues until your posts-per-profile number is reached.
+
 ## 1.2.0 — Follow + like, home feed, different comments
 - **Follow + like**: a new action. For profiles it follows each account and then likes its posts; for a hashtag, place, home feed or post links it likes each post and follows its author. Both actions count toward the task limit and the daily cap.
 - **Your home feed** is a new source: Aurora scrolls your own feed and uses the posts it finds, up to the discovery limit. No target needed.
