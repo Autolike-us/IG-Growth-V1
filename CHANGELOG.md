@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.2.2 — Home feed fix
+- Fixed: with "Your home feed", Aurora only saw the first post on the page. It now reads the whole feed, keeps scrolling to load more, and counts each post once (a reel and its post link are the same post).
+
+## 1.2.1 — Profiles without a Next arrow
+- Fixed: when Instagram opens a post as a plain page (no left/right arrow), Aurora used to stop after the first post. It now closes the post, opens the next picture on the profile grid, and continues until your posts-per-profile number is reached.
+
+## 1.2.0 — Follow + like, home feed, different comments
+- **Follow + like**: a new action. For profiles it follows each account and then likes its posts; for a hashtag, place, home feed or post links it likes each post and follows its author. Both actions count toward the task limit and the daily cap.
+- **Your home feed** is a new source: Aurora scrolls your own feed and uses the posts it finds, up to the discovery limit. No target needed.
+- **A different comment on each post**: write one comment per line and tick the new box; Aurora picks one at random for each post and does not repeat a comment until all have been used.
+- Instagram's own "Something went wrong" page is now recognised: Aurora reloads it (and tries the other form of a hashtag address) instead of reading an empty page, and says clearly when the problem comes from Instagram.
+
+## 1.1.0 — New popup and a fresher dashboard
+- The toolbar popup is now a small status card: what is running, Pause / Stop, today's count against your daily limit, your license, and **Open dashboard**. It cannot start or resume anything.
+- Everything else (new tasks, saved setups, history, debug log) lives in the full dashboard tab, which opens from the popup. It re-uses the tab if it is already open.
+- The dashboard has a calmer look in light and dark, a fourth **Today** card and a Help & support link.
+- Nothing about how tasks run has changed: previews, confirmations, pacing, receipts and pause-on-problems are exactly as in 1.0.1.
+
 ## 1.0.1
 - New: Telegram channel "Aurora Studios Report" for bug reports, feature requests and ideas — linked in the footer of the studio and the toolbar popup (next to Report an issue and Contact us).
 

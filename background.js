@@ -2,7 +2,7 @@ importScripts('selectors.js','engine.js','license-config.js','license.js');
 const base='https://www.instagram.com/';
 let busy=false;
 // Errors raised before any click is sent; safe to retry while Instagram finishes rendering.
-const RETRYABLE=/did not render this page|No posts appeared|Cannot identify this post author|Could not find the|dialog did not open|Cannot identify post action bar|Post Like button unavailable|Follow control unavailable/;
+const RETRYABLE=/did not render this page|Something went wrong|No posts appeared|Cannot identify this post author|Could not find the|dialog did not open|Cannot identify post action bar|Post Like button unavailable|Follow control unavailable/;
 // Pauses that need a person (not a one-click Resume).
 const NEEDS_HUMAN=/captcha|verify|verification|restricted|Sign in|Daily cap|interrupted|restarted|unknown/i;
 const HISTORY_MAX=5000,RECEIPT_MAX_AGE=90*864e5,LOG_MAX=1500;
@@ -55,11 +55,11 @@ async function finish(job){
 }
 // Send a step to the task tab; if the content script is missing (extension reloaded, tab opened earlier), attach it once and retry.
 async function sendStep(job,step){
- const msg={action:'step',step,config:job.config,jobId:job.id};
+ const msg={action:'step',step,config:step.act?{...job.config,action:step.act}:job.config,jobId:job.id};
  try{return await chrome.tabs.sendMessage(job.tabId,msg);}
  catch(err){
   await dlog('warn','Page script not reachable, re-attaching it',String(err?.message||err));
-  try{await chrome.scripting.executeScript({target:{tabId:job.tabId},files:['selectors.js','dom.js','content.js']});return await chrome.tabs.sendMessage(job.tabId,msg);}
+  try{await chrome.scripting.executeScript({target:{tabId:job.tabId},files:['selectors.js','dom.js','comments.js','content.js']});return await chrome.tabs.sendMessage(job.tabId,msg);}
   catch(err2){throw Error('Instagram content script is unavailable. Refresh the task tab and resume.'+(err2?.message?' ('+String(err2.message).slice(0,120)+')':''));}
  }
 }
@@ -85,7 +85,10 @@ async function tick(){
   const r=await sendStep(job,step.kind==='walk'?{...step,done:job.done||0,room}:step);
   const latest=(await chrome.storage.local.get('job')).job;if(latest?.id!==job.id||latest.status!=='running')return;
   job.inFlight=false;await save(job);
-  if(r?.error&&RETRYABLE.test(r.error)&&(job.retries||0)<3){job.retries=(job.retries||0)+1;job.message=`Instagram was still loading (${r.error}) Retrying ${job.retries}/3…`;job.nextAt=Date.now()+8000;await save(job);await dlog('warn',`Retry ${job.retries}/3 after: ${r.error}`,ctx(r));await schedule(job);return;}
+  if(r?.error&&RETRYABLE.test(r.error)&&(job.retries||0)<3){job.retries=(job.retries||0)+1;job.message=`Instagram was still loading (${r.error}) Retrying ${job.retries}/3…`;job.nextAt=Date.now()+8000;
+  // Instagram's own error page never fixes itself, so reload it: the first and last retry reload, the second tries the other form of a hashtag address.
+  if(/Something went wrong/.test(r.error)){try{const tag=step.kind==='posts'?AuroraSelectors.pageKey(step.url):'';const alt=job.retries===2&&String(tag).startsWith('tag:')?'https://www.instagram.com/explore/tags/'+encodeURIComponent(tag.slice(4))+'/':null;if(alt)await chrome.tabs.update(job.tabId,{url:alt});else await chrome.tabs.reload(job.tabId);}catch{}}
+  await save(job);await dlog('warn',`Retry ${job.retries}/3 after: ${r.error}`,ctx(r));await schedule(job);return;}
   if(r?.error){await dlog('error','Step failed: '+r.error,ctx(r));throw Error(r.error);}if(!r)throw Error('Instagram returned no result.');
   job.retries=0;
   if(r.wait){job.message=r.wait;job.nextAt=Date.now()+3000;await save(job);await schedule(job);return;}
@@ -94,7 +97,7 @@ async function tick(){
   if(['walk','account','engage'].includes(step.kind))closeStep(job,step,r);else job.total=Math.max((job.finished?.length||0),(job.total||0)-1+more.length);
   let gap=quick();
   if(['users','posts','author'].includes(step.kind))job.message=`Discovered ${more.length} ${step.kind==='posts'?'posts':'profiles'}. ${r.note||''}`;
-  else{if(r.performed||r.preview){const n=step.kind==='walk'?Math.max(1,r.count||1):1;gap=pause(job);job.done=(job.done||0)+n;if(r.performed){job.counts[job.config.action]+=n;for(let i=0;i<n;i++)await bumpDaily();}else job.previewed+=n;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}
+  else{if(r.performed||r.preview){const n=step.kind==='walk'?Math.max(1,r.count||1):1;gap=pause(job);job.done=(job.done||0)+n;if(r.performed){job.counts[step.act||job.config.action]+=n;for(let i=0;i<n;i++)await bumpDaily();}else job.previewed+=n;}else job.skipped++;job.liked=job.counts.like;job.message=r.message;}
   await log(job.message,step.url);await dlog('info','→ '+job.message,/^Skipped/.test(job.message||'')?ctx(r):undefined);
   if(!job.queue.length||(job.done||0)>=job.config.limit){await finish(job);return;}
   job.nextAt=Date.now()+gap;await save(job);await schedule(job);
@@ -140,7 +143,7 @@ chrome.runtime.onMessage.addListener((m,s,respond)=>{
    if(busy)throw Error('A step is finishing. Try again shortly.');const old=(await chrome.storage.local.get('job')).job;if(['running','paused'].includes(old?.status))throw Error('Stop the current task first.');
    const config=AuroraEngine.config(m.config),queue=AuroraEngine.initial(config);if(!queue.length)throw Error('All targets are excluded.');
    await chrome.storage.local.set({config:m.config});const tab=await taskTab(queue[0].url);
-   const job={version:2,id:crypto.randomUUID(),config,queue,total:queue.length,finished:[],tabId:tab.id,status:'running',counts:{like:0,follow:0,unfollow:0,comment:0},done:0,liked:0,previewed:0,skipped:0,seen:[],seenUsers:[],nextAt:Date.now()+2000,message:`${config.dry?'Preview':'Live'} ${config.action} task started. Waiting for Instagram.`};
+   const job={version:2,id:crypto.randomUUID(),config,queue,total:queue.length,finished:[],tabId:tab.id,status:'running',counts:{like:0,follow:0,unfollow:0,comment:0},done:0,liked:0,previewed:0,skipped:0,seen:[],seenUsers:[],nextAt:Date.now()+2000,message:`${config.dry?'Preview':'Live'} ${config.action==='followlike'?'follow + like':config.action} task started. Waiting for Instagram.`};
    await save(job);await log(job.message);await dlog('info',job.message,{action:config.action,mode:config.mode,target:String(config.target||'').slice(0,200),limit:config.limit,perUser:config.perUser,scanLimit:config.scanLimit,delay:config.delay,dailyCap:config.dailyCap,preview:config.dry,steps:queue.length});await schedule(job);return{ok:true,message:job.message};
   }
   if(m.action==='captchaCleared'){const {job}=await chrome.storage.local.get('job');if(!job||job.status!=='paused'||!job.waitingCaptcha||s.tab?.id!==job.tabId)return{ok:false};await dlog('info','Captcha solved, continuing');return resumeTask();}

@@ -1,12 +1,15 @@
 {
   "name": "aurora-instagram-studio",
-  "version": "1.0.1",
+  "version": "1.2.2",
   "private": true,
   "scripts": {
     "test": "node tests/planning.test.cjs && node tests/worker.test.cjs && node tests/report.test.cjs && node tests/license.test.cjs && node tests/support_links.test.cjs",
+    "test:feed": "node tests/feed.test.cjs",
     "test:walk": "node tests/walk.test.cjs",
     "test:ui": "node tests/ui.test.cjs",
     "test:browser": "python tests/browser_smoke.py",
+    "test:popup": "node tests/popup.test.cjs",
+    "test:today": "node tests/today.test.cjs",
     "package": "node scripts/package.cjs",
     "package:dev": "node scripts/package.cjs --dev",
     "test:license-ui": "node tests/license_ui.test.cjs"

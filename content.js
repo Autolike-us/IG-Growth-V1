@@ -95,12 +95,13 @@
    const findField=()=>[...(root).querySelectorAll('textarea'),...document.querySelectorAll('textarea')].filter(D.visible).find(e=>/comment/i.test(e.placeholder||e.getAttribute('aria-label')||''))||null;
    const field=await until(findField,id);T('comment box found',!!field);
    if(!field)return {message:'Skipped: comments are disabled or the comment field is unavailable.'};
-   if(c.dry)return {preview:true,message:`Preview comment: ${c.comment}. Nothing posted.`};
+   if(c.dry)return {preview:true,message:`Preview comment: ${c.commentMany?'one of your '+c.commentList.length+' comments (a different one on each post)':c.comment}. Nothing posted.`};
    if(!actor)throw Error('Cannot identify the signed-in account. Refresh Instagram.');
    const key=`${actor}:comment:${S.pageKey(location.href)}`;
    const {receipts={}}=await chrome.storage.local.get('receipts');if(receipts[key])return {message:'Skipped: Aurora already attempted a comment on this post. No duplicate sent.'};
-   if(field.value.trim()&&field.value.trim()!==c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
-   const want=c.comment.replace(/\s*[\r\n]+\s*/g,' ').trim();
+   const text=c.commentMany?await AuroraComments.pick(c,key):c.comment;
+   if(field.value.trim()&&field.value.trim()!==text.replace(/\s*[\r\n]+\s*/g,' ').trim())throw Error('The comment box already contains text. Clear it manually before resuming.');
+   const want=text.replace(/\s*[\r\n]+\s*/g,' ').trim();
    const ownComment=()=>D.commentRows(root).some(row=>D.names(row)[0]===actor&&row.textContent.includes(want));
    if(ownComment())return {message:'Skipped: your comment is already visible.'};
    await active(id);await think(500,1400);
@@ -167,9 +168,23 @@
     if(acted>=max)break;
     // pace only after a real action; skipped posts move on quickly
     if(r.performed){const ms=Math.round(c.delay*1000*(1+Math.random()*0.4));await progress(id,acted,'@'+name+': post '+visited.size+' done ✓ · '+acted+'/'+max+' on this profile',Date.now()+ms,visited.size,max);await sleepActive(ms,id);}
-    const next=nextBtn();if(!next){T('no Next arrow: last post');break;}
-    await active(id);await think(700,1800);next.click();
-    if(!await until(()=>S.pageKey(location.href)!==key,id,8000)){T('Next did not advance');break;}
+    const next=nextBtn();
+    if(next){
+     await active(id);await think(700,1800);next.click();
+     if(!await until(()=>S.pageKey(location.href)!==key,id,8000)){T('Next did not advance');break;}
+     await think(700,1500);continue;
+    }
+    // No Next arrow (Instagram sometimes opens posts as plain pages): go back to the grid and open the next unvisited tile.
+    T('no Next arrow: back to the grid');
+    await closePost(profileKey);await think(700,1500);await active(id);
+    let nextTile=null;
+    for(let tries=0;tries<6&&!nextTile;tries++){
+     nextTile=gridTiles().find(a=>!visited.has(S.pageKey(a.href)))||null;
+     if(!nextTile){const tl=gridTiles();if(tl.length)tl[tl.length-1].scrollIntoView({block:'center',behavior:'instant'});window.scrollBy(0,innerHeight*0.8);await wait(1200);}
+    }
+    if(!nextTile){T('no more posts on the grid');break;}
+    nextTile.scrollIntoView({block:'center',behavior:'instant'});await think(700,1500);await active(id);nextTile.click();
+    if(!await until(()=>S.postURL(location.href)&&postRoot(),id,15000)){T('next post did not open');break;}
     await think(700,1500);
    }
   }finally{try{await closePost(profileKey);}catch{}}
@@ -180,16 +195,17 @@
  async function step(s,c,id){
   await active(id);
   if(!await until(()=>D.scope(),id,15000))throw Error('Instagram did not render this page. Check access and resume.');
-  const root=D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
+  // On the home feed D.scope() is just the first <article>; read the whole feed column instead.
+  const root=s.kind==='posts'&&c.mode==='feed'?(document.querySelector('main')||document.body):D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
   if(s.kind==='posts'){
-   const read=()=>[...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(Boolean);
+   const read=()=>{const seen=new Set();return [...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(u=>{if(!u)return false;const k=u.split('/')[4];if(seen.has(k))return false;seen.add(k);return true;});};
    const empty=()=>{if(!s.username)return null;const t=document.body.innerText||'';return /This account is private|This Account is Private/i.test(t)?'the account is private':/No posts yet|No Posts Yet/i.test(t)?'it has no posts':/Sorry, this page isn.t available|The link you followed may be broken|Page Not Found/i.test(t)?'the profile is unavailable':null;};
    const ready=await until(()=>read().length||empty(),id,15000);
-   if(!ready)throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');
+   if(!ready){if(/Something went wrong|page could not be loaded/i.test(document.body.innerText||''))throw Error('Instagram showed “Something went wrong” for this page (this comes from Instagram, not from Aurora). Open the same page by hand to see if it loads, or choose a profile, a place or your home feed instead.');throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');}
    if(!read().length)T('empty profile:',ready);
    if(!read().length)return {posts:[],note:`Skipped @${s.username}: ${ready}.`};
    T('post links',read().length);
-   const posts=await collect(root,read,['hashtag','location'].includes(c.mode)?c.scanLimit:c.perUser,id);
+   const posts=await collect(root,read,['hashtag','location','feed'].includes(c.mode)?c.scanLimit:c.perUser,id);
    return {posts,note:'Collected available posts within your scan limit.'};
   }
   if(s.kind==='users'){
