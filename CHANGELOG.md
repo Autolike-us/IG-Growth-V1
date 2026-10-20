@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.2 — Home feed fix
+- Fixed: with "Your home feed", Aurora only saw the first post on the page. It now reads the whole feed, keeps scrolling to load more, and counts each post once (a reel and its post link are the same post).
+
 ## 1.2.1 — Profiles without a Next arrow
 - Fixed: when Instagram opens a post as a plain page (no left/right arrow), Aurora used to stop after the first post. It now closes the post, opens the next picture on the profile grid, and continues until your posts-per-profile number is reached.
 

@@ -195,9 +195,10 @@
  async function step(s,c,id){
   await active(id);
   if(!await until(()=>D.scope(),id,15000))throw Error('Instagram did not render this page. Check access and resume.');
-  const root=D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
+  // On the home feed D.scope() is just the first <article>; read the whole feed column instead.
+  const root=s.kind==='posts'&&c.mode==='feed'?(document.querySelector('main')||document.body):D.scope();T('step',s.kind,c.action||'','container',root.tagName.toLowerCase()+(root.id?'#'+root.id:''));
   if(s.kind==='posts'){
-   const read=()=>[...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(Boolean);
+   const read=()=>{const seen=new Set();return [...root.querySelectorAll('a[href]')].map(a=>S.postURL(a.href)).filter(u=>{if(!u)return false;const k=u.split('/')[4];if(seen.has(k))return false;seen.add(k);return true;});};
    const empty=()=>{if(!s.username)return null;const t=document.body.innerText||'';return /This account is private|This Account is Private/i.test(t)?'the account is private':/No posts yet|No Posts Yet/i.test(t)?'it has no posts':/Sorry, this page isn.t available|The link you followed may be broken|Page Not Found/i.test(t)?'the profile is unavailable':null;};
    const ready=await until(()=>read().length||empty(),id,15000);
    if(!ready){if(/Something went wrong|page could not be loaded/i.test(document.body.innerText||''))throw Error('Instagram showed “Something went wrong” for this page (this comes from Instagram, not from Aurora). Open the same page by hand to see if it loads, or choose a profile, a place or your home feed instead.');throw Error('No posts appeared. Use a specific place feed or accessible hashtag/profile; check the task tab.');}
