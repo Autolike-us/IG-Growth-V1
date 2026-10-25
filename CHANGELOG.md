@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.2.3 — Home feed gets all your posts
+- Fixed: the home feed stopped after about 3 posts even when you asked for 10. Aurora now scrolls the feed properly, waits for Instagram to load more, and keeps going until it has enough posts. It also looks at extra posts to make up for ones it skips (your own posts, accounts you already follow).
+
 ## 1.2.2 — Home feed fix
 - Fixed: with "Your home feed", Aurora only saw the first post on the page. It now reads the whole feed, keeps scrolling to load more, and counts each post once (a reel and its post link are the same post).
 

@@ -51,11 +51,12 @@
  }
  async function active(id){blocked();const {job}=await chrome.storage.local.get('job');if(job?.id!==id||job.status!=='running')throw Error('Task stopped or paused.');}
  async function until(fn,id,ms=12000){for(let t=0;t<ms;t+=300){await active(id);const x=fn();if(x)return x;await wait(300);}return null;}
- async function collect(root,read,limit,id){
+ async function collect(root,read,limit,id,feed){
   const found=new Set();let stale=0;
-  for(let i=0;i<20&&found.size<limit&&stale<3;i++){
+  for(let i=0;i<(feed?40:20)&&found.size<limit&&stale<(feed?6:3);i++){
    await active(id);const before=found.size;read().forEach(x=>found.add(x));stale=found.size===before?stale+1:0;
    if(found.size>=limit)break;
+   if(feed){const a=[...root.querySelectorAll('article')];const last=a[a.length-1];if(last)last.scrollIntoView({block:'end'});window.scrollBy(0,Math.max(700,innerHeight));await wait(1200);continue;}
    const scroller=D.scrollContainer(root);
    if(scroller)scroller.scrollTop+=Math.max(300,scroller.clientHeight*0.8);
    else if(root.matches('[role="dialog"]'))break;
@@ -205,7 +206,7 @@
    if(!read().length)T('empty profile:',ready);
    if(!read().length)return {posts:[],note:`Skipped @${s.username}: ${ready}.`};
    T('post links',read().length);
-   const posts=await collect(root,read,['hashtag','location','feed'].includes(c.mode)?c.scanLimit:c.perUser,id);
+   const posts=await collect(root,read,['hashtag','location','feed'].includes(c.mode)?(c.mode==='feed'?Math.max(c.scanLimit,c.limit*2):c.scanLimit):c.perUser,id,c.mode==='feed');
    return {posts,note:'Collected available posts within your scan limit.'};
   }
   if(s.kind==='users'){
