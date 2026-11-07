@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.4 — Move or hide the Aurora button
+- **Move it**: drag the floating Aurora button to any corner of the page. Aurora remembers the spot, and the panel opens up or down so it never goes off screen. Double-click the button to put it back.
+- **Hide it**: a small × next to the button hides it. Turn it back on with the checkbox "Show the Aurora button on pages" in the toolbar popup. If a task pauses and needs you, the button still appears so you do not miss it.
+
+## 1.2.3 — Home feed gets all your posts
+- Fixed: the home feed stopped after about 3 posts even when you asked for 10. Aurora now scrolls the feed properly, waits for Instagram to load more, and keeps going until it has enough posts. It also looks at extra posts to make up for ones it skips (your own posts, accounts you already follow).
+
 ## 1.2.2 — Home feed fix
 - Fixed: with "Your home feed", Aurora only saw the first post on the page. It now reads the whole feed, keeps scrolling to load more, and counts each post once (a reel and its post link are the same post).
 

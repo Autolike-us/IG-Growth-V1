@@ -16,5 +16,8 @@ try{const pg=await browser.newPage();pg.on('pageerror',e=>{throw e;});await pg.s
  const codes=(r.posts||[]).map(u=>u.match(/\/p\/([^/]+)/)?.[1]);
  check('home feed: collects every post in the feed column (not just the first article)',codes.includes('DenH7N6DnXF')&&codes.includes('Deb036EpfN5'));
  check('home feed: keeps scrolling to load more posts up to the scan limit',codes.length===3&&codes.includes('Dxx333'));
+ await pg.evaluate(()=>{window.scrollBy=()=>{var m=document.querySelector('main'),k=m.querySelectorAll('article').length;if(k<14){var a=document.createElement('article');a.innerHTML='<a href="https://www.instagram.com/p/Zb'+k+'/"><time>1d</time></a>';m.append(a);}};});
+ const r2=await pg.evaluate(()=>new Promise(r=>listeners[0]({action:'step',step:{kind:'posts',url:'https://www.instagram.com/',label:'your home feed'},config:{action:'like',dry:true,mode:'feed',perUser:3,limit:10,delay:30,exclude:[],maxAge:0,videos:false,scanLimit:15,comment:'x'},jobId:'test'},{id:'extension'},r)));
+ check('home feed: limit 10 / scan 15 finds at least 10 posts as the feed loads one at a time',(r2.posts||[]).length>=10);
  console.log('\n'+passed+' feed checks passed');
 }finally{await browser.close();}})().catch(e=>{console.error(e);process.exit(1);});
